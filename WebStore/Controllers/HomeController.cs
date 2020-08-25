@@ -22,7 +22,7 @@ namespace WebStore.Controllers
             },
             new EmployeeViewModel
             {
-                Id = 1,
+                Id = 2,
                 FirstName = "Петр",
                 SureName = "Сидоров",
                 Patronymic = "Владимирович",
@@ -33,12 +33,19 @@ namespace WebStore.Controllers
 
         public IActionResult Index()
         {
-            //return Content("Heelo from Controller");
             return View();
         }
         public IActionResult Employees()
         {
             return View(_employees);
+        }
+        public IActionResult EmployeeDetails(int id)
+        {
+            var employee = _employees.FirstOrDefault(x => x.Id == id);
+            if (employee == null)
+                return NotFound();
+
+            return View(employee);
         }
     }
 }
