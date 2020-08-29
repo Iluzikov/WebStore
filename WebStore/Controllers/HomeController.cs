@@ -44,6 +44,12 @@ namespace WebStore.Controllers
         {
             return View();
         }
+
+        public IActionResult Blog()
+        {
+            return View();
+        }
+
         public IActionResult Employees()
         {
             return View(_employees);
