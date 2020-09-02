@@ -1,0 +1,56 @@
+﻿@model WebStore.ViewModels.CarViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="container">
+    <h2>Edit</h2>
+
+    <h4>CarViewModel</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Id" class="control-label"></label>
+                    <input asp-for="Id" class="form-control" />
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Brand" class="control-label"></label>
+                    <input asp-for="Brand" class="form-control" />
+                    <span asp-validation-for="Brand" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Model" class="control-label"></label>
+                    <input asp-for="Model" class="form-control" />
+                    <span asp-validation-for="Model" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Engine" class="control-label"></label>
+                    <input asp-for="Engine" class="form-control" />
+                    <span asp-validation-for="Engine" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ReleaseYear" class="control-label"></label>
+                    <input asp-for="ReleaseYear" class="form-control" />
+                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CarBody" class="control-label"></label>
+                    <input asp-for="CarBody" class="form-control" />
+                    <span asp-validation-for="CarBody" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-controller="Car" asp-action="Cars">Back to List</a>
+    </div>
+</div>
+
