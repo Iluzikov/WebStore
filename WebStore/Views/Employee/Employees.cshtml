@@ -8,7 +8,7 @@
     <h2>Employees</h2>
 
     <p>
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Edit" class="btn btn-success">Добавить</a>
     </p>
     <table class="table">
         <thead>
@@ -41,7 +41,7 @@
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                         @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id /* id=item.PrimaryKey */ })
                     </td>
                 </tr>
             }
