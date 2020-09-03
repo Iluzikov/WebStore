@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.ViewModels;
 
@@ -12,24 +8,28 @@ namespace WebStore.Controllers
     public class CarController : Controller
     {
         private readonly ICarsService _carsService;
-        
+
         public CarController(ICarsService cars)
         {
             _carsService = cars;
         }
 
+        /// <summary>
+        /// Показать весь список
+        /// </summary>
+        /// <returns></returns>
         [Route("all")]
         public IActionResult Cars()
         {
             return View(_carsService.GetAll());
         }
 
-        [Route("{id}")]
         /// <summary>
         /// Детализация по id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Route("{id}")]
         public IActionResult CarDetails(int id)
         {
             var car = _carsService.GetById(id);
@@ -38,6 +38,11 @@ namespace WebStore.Controllers
             return View(car);
         }
 
+        /// <summary>
+        /// Редактирование получение
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("edit/{id?}")]
         public IActionResult Edit(int? id)
@@ -52,6 +57,11 @@ namespace WebStore.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование отправка
+        /// </summary>
+        /// <param name="carModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("edit/{id?}")]
         public IActionResult Edit(CarViewModel carModel)
@@ -76,6 +86,11 @@ namespace WebStore.Controllers
             return RedirectToAction(nameof(Cars));
         }
 
+        /// <summary>
+        /// Удалить
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult Delete(int id)
         {
             _carsService.Delete(id);
