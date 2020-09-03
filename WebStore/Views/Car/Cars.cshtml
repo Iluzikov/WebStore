@@ -8,7 +8,7 @@
     <h2>Cars</h2>
 
     <p>
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Edit" class="btn btn-success">Добавить</a>
     </p>
     <table class="table">
         <thead>
@@ -39,9 +39,9 @@
                         @Html.DisplayFor(modelItem => item.Model)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
                         @Html.ActionLink("Детали", "CarDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
                     </td>
                 </tr>
             }
