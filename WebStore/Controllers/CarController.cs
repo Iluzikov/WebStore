@@ -66,6 +66,10 @@ namespace WebStore.Controllers
         [Route("edit/{id?}")]
         public IActionResult Edit(CarViewModel carModel)
         {
+            // проверка модели на валидность
+            if (!ModelState.IsValid)
+                return View(carModel);
+
             if (carModel.Id > 0) // если есть Id, то редактируем модель
             {
                 var dbItem = _carsService.GetById(carModel.Id);
