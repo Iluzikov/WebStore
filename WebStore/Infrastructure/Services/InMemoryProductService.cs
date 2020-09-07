@@ -411,20 +411,20 @@ namespace WebStore.Infrastructure.Services
             return _brands;
         }
 
-        //public IEnumerable<Product> GetProducts(ProductFilter filter)
-        //{
-        //    var products = _products;
+        public IEnumerable<Product> GetProducts(ProductFilter filter)
+        {
+            var products = _products;
 
-        //    if (filter.CategoryId.HasValue)
-        //        products = products
-        //            .Where(p => p.CategoryId.Equals(filter.CategoryId))
-        //            .ToList();
-        //    if (filter.BrandId.HasValue)
-        //        products = products
-        //            .Where(p => p.BrandId.HasValue && p.BrandId.Value == filter.BrandId.Value)
-        //            .ToList();
+            if (filter.CategoryId.HasValue)
+                products = products
+                    .Where(p => p.CategoryId.Equals(filter.CategoryId))
+                    .ToList();
+            if (filter.BrandId.HasValue)
+                products = products
+                    .Where(p => p.BrandId.HasValue && p.BrandId.Value == filter.BrandId.Value)
+                    .ToList();
 
-        //    return products;
-        //}
+            return products;
+        }
     }
 }
