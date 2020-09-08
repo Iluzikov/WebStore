@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CategoryViewModel>
+﻿@model IEnumerable<WebStore.ViewModels.CategoryViewModel>
 <h2>Category</h2>
 <div class="panel-group category-products" id="accordian">
     <!--category-productsr-->
@@ -29,7 +29,8 @@
                         </ul>
                     </div>
                 </div>
-            </div> }
+            </div> 
+        }
         else // если нет дочерних элементов
         {
             <div class="panel panel-default">
@@ -39,7 +40,8 @@
                            asp-route-CategoryId="@parentCategory.Id">@parentCategory.Name</a>
                     </h4>
                 </div>
-            </div>}
+            </div>
+        }
 
     }
 
