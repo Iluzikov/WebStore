@@ -30,7 +30,7 @@ namespace WebStore
 
             services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
-            services.AddSingleton<IProductService, InMemoryProductService>();
+            services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
