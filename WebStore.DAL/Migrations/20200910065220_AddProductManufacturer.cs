@@ -2,7 +2,7 @@
 
 namespace WebStore.DAL.Migrations
 {
-    public partial class AddManufacturer : Migration
+    public partial class AddProductManufacturer : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
