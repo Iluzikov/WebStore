@@ -4,7 +4,6 @@
     ViewData["Title"] = "Вход";
 }
 
-
 <section id="form">
     <!--form-->
     <div class="row">
@@ -20,7 +19,7 @@
 
                     <input asp-for="Password" placeholder="@nameof(Model.Password)" />
                     <span asp-validation-for="Password" class="text-danger"></span>
-
+                    <br />
                     <span>
                         <input asp-for="RememberMe" class="checkbox">
                         Запомнить меня
