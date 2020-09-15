@@ -34,6 +34,7 @@ namespace WebStore
             services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
             services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
+            services.AddScoped<ICartService, CoocieCartService>(); 
 
             //Подключаем идентификацию
             services.AddIdentity<User, IdentityRole>()
