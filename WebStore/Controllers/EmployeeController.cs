@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebStore.Domain;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.ViewModels;
 
 namespace WebStore.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IEmployeesService _employeesService;
@@ -17,6 +20,7 @@ namespace WebStore.Controllers
             _employeesService = employeesService;
         }
 
+        [AllowAnonymous]
         /// <summary>
         /// Выдает список всех сотрудников
         /// </summary>
@@ -26,6 +30,7 @@ namespace WebStore.Controllers
             return View(_employeesService.GetAll());
         }
 
+        //[Authorize(Roles = "Admins, Users")]
         /// <summary>
         /// Детализация сотрудника по ID
         /// </summary>
@@ -45,6 +50,7 @@ namespace WebStore.Controllers
         }
     
         [HttpGet]
+        [Authorize(Roles = WebStoreUserRoles.Admins)]
         public IActionResult Edit(int? id)
         {
             if (!id.HasValue)
@@ -58,6 +64,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = WebStoreUserRoles.Admins)]
         public IActionResult Edit(EmployeeViewModel model)
         {
             if (model.Age < 18 || model.Age > 100)
@@ -89,6 +96,7 @@ namespace WebStore.Controllers
             return RedirectToAction(nameof(Employees));
         }
 
+        [Authorize(Roles = WebStoreUserRoles.Admins)]
         public IActionResult Delete(int id)
         {
             _employeesService.Delete(id);
