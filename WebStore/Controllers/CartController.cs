@@ -7,6 +7,7 @@ using WebStore.Infrastructure.Interfaces;
 
 namespace WebStore.Controllers
 {
+
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
