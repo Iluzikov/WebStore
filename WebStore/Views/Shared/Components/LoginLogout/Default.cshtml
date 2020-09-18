@@ -1,6 +1,10 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
     <span>Здравствуйте, @User.Identity.Name</span>
+    @if (User.IsInRole(WebStoreUserRoles.Admins))
+    {
+    <a asp-action="Index" asp-controller="Home" asp-area="Admin" class="btn btn-default">Админка</a>
+    }
     <form method="post" asp-controller="Account" asp-action="Logout" asp-antiforgery="true">
         <input type="submit" value="Выход" class="btn btn-default" />
     </form>
