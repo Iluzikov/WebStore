@@ -424,5 +424,10 @@ namespace WebStore.Infrastructure.Services
 
             return products;
         }
+
+        public Product GetProductById(int id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
