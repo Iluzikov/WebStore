@@ -11,7 +11,7 @@
                     <div class="productinfo text-center">
                         
                         <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@item.Id">
-                            <img src="~/images/home/@item.ImageUrl" alt="" />
+                            <img src="~/images/shop/@item.ImageUrl" alt="" />
                             <h2>@item.Price.ToString("C")</h2>
                             <p>@item.Name</p>
                         </a>

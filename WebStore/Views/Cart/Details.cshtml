@@ -1,4 +1,4 @@
-﻿@model CartViewModel
+﻿@model OrderDetailsViewModel
 @{
     ViewData["Title"] = "Корзина";
 }
@@ -24,8 +24,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Items)
+                    @{
+                        var sumCart = 0m;
+                    }
+                    @foreach (var item in Model.CartViewModel.Items)
                     {
+                        sumCart += (item.Value * item.Key.Price);
                         <tr>
                             <td class="cart_product">
                                 <a href="">
@@ -83,4 +87,14 @@
             </table>
         </div>
     </section> <!--/#cart_items-->
+    <section id="do_action">
+        <div class="heading">
+            <h3>Оформите заказ</h3>
+        </div>
+        <div class="row login-form">
+            @Html.Partial("_OrderPartial", Model.OrderViewModel,
+                new ViewDataDictionary(ViewData) { { "sumCart", sumCart } })
+        </div>
+    </section>
+
 </div>
