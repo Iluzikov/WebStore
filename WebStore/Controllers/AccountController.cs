@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain;
+using WebStore.Infrastructure.Interfaces;
 using WebStore.ViewModels;
 
 namespace WebStore.Controllers
@@ -13,11 +15,13 @@ namespace WebStore.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IOrderService _orderService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrderService orderService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -85,7 +89,21 @@ namespace WebStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
+        public IActionResult GetOrdersByUser()
+        {
+            var orders = _orderService.GetUserOrders(User.Identity.Name);
+            var userOrder = orders.Select(o => new UserOrderViewModel
+            {
+                Id = o.Id,
+                Name = o.Name,
+                Phone = o.Phone,
+                Address = o.Address,
+                TotalSum = o.OrderItem.Sum(x => x.Price * x.Quantity)
+            });
 
+            return View(userOrder);
+        }
 
     }
 }
