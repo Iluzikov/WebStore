@@ -66,16 +66,16 @@ namespace WebStore.Infrastructure.Services
         public Order GetOrderById(int id)
         {
             return _context.Orders
-                .Include("User")
-                .Include("OrderItems")
+                .Include(order => order.User)
+                .Include(order => order.OrderItem)
                 .FirstOrDefault(o => o.Id.Equals(id));
         }
 
         public IEnumerable<Order> GetUserOrders(string userName)
         {
             return _context.Orders
-                .Include("User")
-                .Include("OrderItems")
+                .Include(order => order.User)
+                .Include(order => order.OrderItem)
                 .Where(o => o.User.UserName.Equals(userName))
                 .ToList();
         }
