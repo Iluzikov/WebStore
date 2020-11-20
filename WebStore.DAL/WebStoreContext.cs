@@ -7,9 +7,7 @@ namespace WebStore.DAL
 {
     public class WebStoreContext : IdentityDbContext<User>
     {
-        public WebStoreContext(DbContextOptions options) : base(options)
-        {
-        }
+        public WebStoreContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }

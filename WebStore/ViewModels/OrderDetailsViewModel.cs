@@ -2,7 +2,7 @@
 {
     public class OrderDetailsViewModel
     {
-        public CartViewModel CartViewModel { get; set; }
-        public OrderViewModel OrderViewModel { get; set; }
+        public CartViewModel Cart { get; set; }
+        public OrderViewModel Order { get; set; } = new OrderViewModel();
     }
 }

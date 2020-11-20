@@ -13,7 +13,7 @@ using WebStore.Domain.Entities;
 namespace WebStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = WebStoreUserRoles.Admins)]
+    [Authorize(Roles = WebStoreRole.Admins)]
     public class ProductsController : Controller
     {
         private readonly WebStoreContext _context;

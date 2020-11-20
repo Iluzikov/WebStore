@@ -15,26 +15,23 @@ namespace WebStore.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IOrderService _orderService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrderService orderService)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _orderService = orderService;
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
-            return View(new LoginViewModel());
+            return View(new LoginViewModel { ReturnUrl = ReturnUrl });
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (!ModelState.IsValid) return View(model);
 
             var loginResult = await _signInManager.PasswordSignInAsync(
                 model.UserName,
@@ -42,16 +39,15 @@ namespace WebStore.Controllers
                 model.RememberMe,
                 lockoutOnFailure: false);
 
-            if (!loginResult.Succeeded)
+            if (loginResult.Succeeded)
             {
-                ModelState.AddModelError("", "Вход невозможен");
-                return View(model);
+                if (Url.IsLocalUrl(model.ReturnUrl)) //если ReturnUrl - локальный
+                    return Redirect(model.ReturnUrl); //перенаправляем туда, откуда пришли
+                return RedirectToAction("Index", "Home");
             }
 
-            if(Url.IsLocalUrl(model.ReturnUrl)) //если ReturnUrl - локальный
-                return Redirect(model.ReturnUrl); //перенаправляем туда, откуда пришли
-
-            return RedirectToAction("Index", "Home");
+            ModelState.AddModelError(string.Empty, "Неверное имя пользователя или пароль!");
+            return View(model);
         }
 
         public async Task<IActionResult> Logout()
@@ -62,48 +58,46 @@ namespace WebStore.Controllers
 
 
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View(new RegisterUserViewModel());
-        }
-
+        public IActionResult Register() => View(new RegisterUserViewModel());
+        
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (!ModelState.IsValid) return View(model);
 
             var user = new User { UserName = model.UserName, Email = model.Email };
-            var createResult = await _userManager.CreateAsync(user, model.Password);
+            var registrationResult = await _userManager.CreateAsync(user, model.Password);
             
-            if (!createResult.Succeeded)
+            if (registrationResult.Succeeded)
             {
-                foreach (var identityError in createResult.Errors) //выводим ошибки
-                {
-                    ModelState.AddModelError("", identityError.Description);
-                    return View(model);
-                }
+                await _userManager.AddToRoleAsync(user, WebStoreRole.Users);
+                await _signInManager.SignInAsync(user, false); //если успешно - логинимся
+                return RedirectToAction("Index", "Home");
             }
-            await _userManager.AddToRoleAsync(user, WebStoreUserRoles.Users);
-            await _signInManager.SignInAsync(user, false); //если успешно - логинимся
-            return RedirectToAction("Index", "Home");
+
+            foreach (var identityError in registrationResult.Errors) //выводим ошибки
+                ModelState.AddModelError(string.Empty, identityError.Description);
+            
+            return View(model);
         }
 
-        [Authorize]
-        public IActionResult GetOrdersByUser()
-        {
-            var orders = _orderService.GetUserOrders(User.Identity.Name);
-            var userOrder = orders.Select(o => new UserOrderViewModel
-            {
-                Id = o.Id,
-                Name = o.Name,
-                Phone = o.Phone,
-                Address = o.Address,
-                TotalSum = o.OrderItem.Sum(x => x.Price * x.Quantity)
-            });
+        public IActionResult AccessDenied() => View();
 
-            return View(userOrder);
-        }
+        //[Authorize]
+        //public IActionResult GetOrdersByUser()
+        //{
+        //    var orders = _orderService.GetUserOrders(User.Identity.Name);
+        //    var userOrder = orders.Select(o => new UserOrderViewModel
+        //    {
+        //        Id = o.Id,
+        //        Name = o.Name,
+        //        Phone = o.Phone,
+        //        Address = o.Address,
+        //        TotalSum = o.OrderItem.Sum(x => x.Price * x.Quantity)
+        //    });
+
+        //    return View(userOrder);
+        //}
 
     }
 }

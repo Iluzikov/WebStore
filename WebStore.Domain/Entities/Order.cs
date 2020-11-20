@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebStore.Domain.Entities.Base;
 
 namespace WebStore.Domain.Entities
@@ -9,7 +10,9 @@ namespace WebStore.Domain.Entities
         public string Phone { get; set; }
         public string Address { get; set; }
         public DateTime Date { get; set; }
+
+        [Required]
         public virtual User User { get; set; }
-        public virtual Collection<OrderItem> OrderItem { get; set; }
+        public virtual ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
 }

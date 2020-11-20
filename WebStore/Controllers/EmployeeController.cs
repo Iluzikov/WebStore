@@ -50,7 +50,7 @@ namespace WebStore.Controllers
         }
     
         [HttpGet]
-        [Authorize(Roles = WebStoreUserRoles.Admins)]
+        [Authorize(Roles = WebStoreRole.Admins)]
         public IActionResult Edit(int? id)
         {
             if (!id.HasValue)
@@ -64,7 +64,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = WebStoreUserRoles.Admins)]
+        [Authorize(Roles = WebStoreRole.Admins)]
         public IActionResult Edit(EmployeeViewModel model)
         {
             if (model.Age < 18 || model.Age > 100)
@@ -96,7 +96,7 @@ namespace WebStore.Controllers
             return RedirectToAction(nameof(Employees));
         }
 
-        [Authorize(Roles = WebStoreUserRoles.Admins)]
+        [Authorize(Roles = WebStoreRole.Admins)]
         public IActionResult Delete(int id)
         {
             _employeesService.Delete(id);

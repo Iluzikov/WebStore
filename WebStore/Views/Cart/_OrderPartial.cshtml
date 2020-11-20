@@ -1,6 +1,6 @@
 ﻿@model OrderViewModel
 
-<form method="post" asp-antiforgery="true" asp-action="CheckOut">
+<form method="post" asp-area="" asp-controller="Cart" asp-antiforgery="true" asp-action="CheckOut">
     <div class="col-sm-6">
         <input asp-for="Name" placeholder="@nameof(@Model.Name)" />
         <span asp-validation-for="Name" class="text-danger"></span>
@@ -12,20 +12,17 @@
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
     @{
-        ViewData.TryGetValue("sumCart", out var sumObj);
+        ViewData.TryGetValue("TotalPrice", out var TotalPrice);
     }
     <div class="col-sm-6">
         <div class="total_area">
-            @if (sumObj != null)
+            @if (TotalPrice is decimal price && price > 0)
             {
-                var sum = (decimal)sumObj;
                 <ul>
-                    <li>Итого <span>@sum.ToString("C")</span></li>
+                    <li>Итого <span>@price.ToString("C")</span></li>
                 </ul>
-                if (sum > 0)
-                {
-                    <input type="submit" value="Оформить заказ" class="btn btn-default check_out" />
-                }
+                
+                <input type="submit" value="Оформить заказ" class="btn btn-default check_out" />
             }
         </div>
     </div>

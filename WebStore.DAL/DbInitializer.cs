@@ -448,10 +448,10 @@ namespace WebStore.DAL
         public static void InitializeUsers(IServiceProvider services)
         {
             var roleManager = services.GetService<RoleManager<IdentityRole>>();
-            EnsureRole(roleManager, WebStoreUserRoles.Users);
-            EnsureRole(roleManager, WebStoreUserRoles.Admins);
+            EnsureRole(roleManager, WebStoreRole.Users);
+            EnsureRole(roleManager, WebStoreRole.Admins);
 
-            EnsureRoleToUser(services, "Admin", WebStoreUserRoles.Admins, "admin@123");
+            EnsureRoleToUser(services, "Admin", WebStoreRole.Admins, "admin@123");
         }
 
         private static void EnsureRoleToUser(IServiceProvider services, string userName, string roleName, string password)

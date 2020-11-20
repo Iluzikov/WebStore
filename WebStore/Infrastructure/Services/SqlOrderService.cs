@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
@@ -22,62 +23,59 @@ namespace WebStore.Infrastructure.Services
             _userManager = userManager;
         }
 
-        public Order CreateOrder(OrderViewModel orderModel, CartViewModel transformCart, string userName)
+        public async Task<Order> CreateOrder(OrderViewModel orderModel, CartViewModel cart, string userName)
         {
-            var user = _userManager.FindByNameAsync(userName).Result;
+            var user = await _userManager.FindByNameAsync(userName);
+            if(user is null) throw new InvalidOperationException($"Пользователь {userName} на найден");
 
-            using (var transaction = _context.Database.BeginTransaction())
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            var order = new Order()
             {
-                var order = new Order()
+                Name = orderModel.Name,
+                Address = orderModel.Address,
+                Phone = orderModel.Phone,
+                Date = DateTime.Now,
+                User = user
+            };
+
+            foreach (var (product_model, quantity) in cart.Items)
+            {
+                var product = await _context.Products.FindAsync(product_model.Id);
+                if (product is null) continue;
+
+                var order_Item = new OrderItem()
                 {
-                    Address = orderModel.Address,
-                    Name = orderModel.Name,
-                    Date = DateTime.Now,
-                    Phone = orderModel.Phone,
-                    User = user
+                    Order = order,
+                    Price = product.Price,
+                    Quantity = quantity,
+                    Product = product
                 };
-
-                _context.Orders.Add(order);
-
-                foreach (var item in transformCart.Items)
-                {
-                    var productVm = item.Key;
-                    var product = _context.Products.FirstOrDefault(p => p.Id.Equals(productVm.Id));
-                    if (product == null)
-                        throw new InvalidOperationException("Продукт не найден в базе");
-
-                    var orderItem = new OrderItem()
-                    {
-                        Price = product.Price,
-                        Quantity = item.Value,
-
-                        Order = order,
-                        Product = product
-                    };
-                    _context.OrderItems.Add(orderItem);
-                }
-                _context.SaveChanges();
-                transaction.Commit();
-
-                return order;
+                order.Items.Add(order_Item);
             }
+            
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return order;
         }
 
-        public Order GetOrderById(int id)
+        public async Task<Order> GetOrderById(int id)
         {
-            return _context.Orders
+            return await _context.Orders
                 .Include(order => order.User)
-                .Include(order => order.OrderItem)
-                .FirstOrDefault(o => o.Id.Equals(id));
+                .FirstOrDefaultAsync(o => o.Id.Equals(id));
         }
 
-        public IEnumerable<Order> GetUserOrders(string userName)
+        public async Task<IEnumerable<Order>> GetUserOrders(string userName)
         {
-            return _context.Orders
+            var res = await _context.Orders
                 .Include(order => order.User)
-                .Include(order => order.OrderItem)
+                .Include(order => order.Items)
                 .Where(o => o.User.UserName.Equals(userName))
-                .ToList();
+                .ToArrayAsync();
+            return res;
         }
     }
 }

@@ -5,7 +5,7 @@ using WebStore.Domain;
 namespace WebStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = WebStoreUserRoles.Admins)]
+    [Authorize(Roles = WebStoreRole.Admins)]
     public class HomeController : Controller
     {
         public IActionResult Index()

@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Employees";
-    var isAdmin = User.IsInRole(WebStoreUserRoles.Admins); //проверяем у пользователя роль админа
+    var isAdmin = User.IsInRole(WebStoreRole.Admins); //проверяем у пользователя роль админа
     var IsAuth = User.Identity.IsAuthenticated; // проверяем аутентификацию пользователя
 }
 

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.ViewModels;
 
@@ -12,23 +10,11 @@ namespace WebStore.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
-        private readonly IOrderService _orderService;
+        
+        public CartController(ICartService cartService) => _cartService = cartService;
 
-        public CartController(ICartService cartService, IOrderService orderService)
-        {
-            _cartService = cartService;
-            _orderService = orderService;
-        }
 
-        public IActionResult Details()
-        {
-            var model = new OrderDetailsViewModel()
-            {
-                CartViewModel = _cartService.TransformCart(),
-                OrderViewModel = new OrderViewModel()
-            };
-            return View(model);
-        }
+        public IActionResult Details() => View(new OrderDetailsViewModel { Cart = _cartService.TransformCart()});
 
         public IActionResult DecrementFromCart(int id)
         {
@@ -51,21 +37,20 @@ namespace WebStore.Controllers
             return Redirect(returnUrl);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult CheckOut(OrderViewModel model)
+        [Authorize]
+        public async Task<IActionResult> CheckOut(OrderViewModel model, [FromServices] IOrderService orderService)
         {
-            if (ModelState.IsValid)
-            {
-                var orderResult = _orderService.CreateOrder(model, _cartService.TransformCart(), User.Identity.Name);
-                _cartService.RemoveAll();
-                return RedirectToAction("OrderConfirmed", new { id = orderResult.Id });
-            }
-            var detailsModel = new OrderDetailsViewModel()
-            {
-                CartViewModel = _cartService.TransformCart(),
-                OrderViewModel = model
-            };
-            return View("Details", detailsModel);
+            if (!ModelState.IsValid)
+                return View(nameof(Details), new OrderDetailsViewModel 
+                {
+                    Cart = _cartService.TransformCart(),
+                    Order = model
+                });
+
+            var order = await orderService.CreateOrder(model, _cartService.TransformCart(), User.Identity.Name);
+            _cartService.RemoveAll();
+
+            return RedirectToAction(nameof(OrderConfirmed), new { id = order.Id });
         }
 
         public IActionResult OrderConfirmed(int id)
