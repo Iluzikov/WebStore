@@ -2,7 +2,7 @@
 using System.Linq;
 using WebStore.Domain;
 using WebStore.Infrastructure.Interfaces;
-using WebStore.ViewModels;
+using WebStore.Domain.ViewModels;
 
 namespace WebStore.Controllers
 {

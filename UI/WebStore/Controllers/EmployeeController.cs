@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain;
 using WebStore.Domain.ViewModels;
@@ -48,7 +44,7 @@ namespace WebStore.Controllers
             //Иначе возвращаем сотрудника
             return View(employee);
         }
-    
+
         [HttpGet]
         [Authorize(Roles = WebStoreRole.Admins)]
         public IActionResult Edit(int? id)

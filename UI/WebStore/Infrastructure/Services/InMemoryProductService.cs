@@ -425,7 +425,7 @@ namespace WebStore.Infrastructure.Services
             return products;
         }
 
-        public Product GetProductById(int id)
+        public Product GetProductById(int id) //видимо забыл сделать..
         {
             throw new System.NotImplementedException();
         }

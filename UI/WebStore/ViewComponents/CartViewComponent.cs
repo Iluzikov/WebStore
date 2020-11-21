@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WebStore.Infrastructure.Interfaces;
 
 namespace WebStore.ViewComponents
@@ -8,15 +7,8 @@ namespace WebStore.ViewComponents
     {
         private readonly ICartService _cartService;
 
-        public CartViewComponent(ICartService cartService)
-        {
-            _cartService = cartService;
-        }
+        public CartViewComponent(ICartService cartService) => _cartService = cartService;
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-
-            return View(_cartService.TransformCart());
-        }
+        public IViewComponentResult Invoke() => View(_cartService.TransformCart());
     }
 }

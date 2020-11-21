@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using WebStore.Domain.ViewModels;
 using WebStore.Infrastructure.Interfaces;
+using WebStore.Domain.ViewModels;
 
 namespace WebStore.ViewComponents
 {
@@ -12,16 +10,9 @@ namespace WebStore.ViewComponents
     {
         private readonly IProductService _productService;
 
-        public BrandsViewComponent(IProductService productService)
-        {
-            _productService = productService;
-        }
+        public BrandsViewComponent(IProductService productService) => _productService = productService;
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var brands = GetBrands();
-            return View(brands);
-        }
+        public IViewComponentResult Invoke() => View(GetBrands());
 
         private IEnumerable<BrandViewModel> GetBrands()
         {

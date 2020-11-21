@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using WebStore.Domain.ViewModels;
 using WebStore.Infrastructure.Interfaces;
 
@@ -17,11 +15,7 @@ namespace WebStore.ViewComponents
             _productService = productService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
-        {
-            var Categories = GetCategories();
-            return View(Categories);
-        }
+        public IViewComponentResult Invoke() => View(GetCategories());
 
         private List<CategoryViewModel> GetCategories()
         {

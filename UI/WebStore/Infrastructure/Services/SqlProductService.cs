@@ -14,7 +14,6 @@ namespace WebStore.Infrastructure.Services
 
         public SqlProductService(WebStoreContext context) =>_context = context;
         
-
         public IEnumerable<Category> GetCategories()
         {
             return _context.Categories.ToList();

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebStore.Domain
+﻿namespace WebStore.Domain
 {
     public static class WebStoreRole
     {
