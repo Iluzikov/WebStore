@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+п»їusing Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,16 +30,16 @@ namespace WebStore
             services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
-            services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
+            services.AddScoped<IProductService, SqlProductService>(); //РјРµРЅСЏРµРј СЂРµР°Р»РёР·Р°С†РёСЋ РЅР° SqlProductService
             services.AddScoped<ICartService, CoocieCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
 
-            //Подключаем идентификацию
+            //РџРѕРґРєР»СЋС‡Р°РµРј РёРґРµРЅС‚РёС„РёРєР°С†РёСЋ
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<WebStoreContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options => // необязательно
+            services.Configure<IdentityOptions>(options => // РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
             {
                 // Password settings
 #if DEBUG
@@ -60,7 +60,7 @@ namespace WebStore
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.ConfigureApplicationCookie(options => // необязательно
+            services.ConfigureApplicationCookie(options => // РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
             {
                 // Cookie settings
                 options.Cookie.Name = "WebStore-GB";
