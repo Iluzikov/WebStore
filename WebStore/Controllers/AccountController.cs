@@ -83,21 +83,21 @@ namespace WebStore.Controllers
 
         public IActionResult AccessDenied() => View();
 
-        //[Authorize]
-        //public IActionResult GetOrdersByUser()
-        //{
-        //    var orders = _orderService.GetUserOrders(User.Identity.Name);
-        //    var userOrder = orders.Select(o => new UserOrderViewModel
-        //    {
-        //        Id = o.Id,
-        //        Name = o.Name,
-        //        Phone = o.Phone,
-        //        Address = o.Address,
-        //        TotalSum = o.OrderItem.Sum(x => x.Price * x.Quantity)
-        //    });
+        [Authorize]
+        public async Task<IActionResult> GetOrdersByUser([FromServices] IOrderService orderService)
+        {
+            var orders = await orderService.GetUserOrders(User.Identity.Name);
+            var userOrder = orders.Select(o => new UserOrderViewModel
+            {
+                Id = o.Id,
+                Name = o.Name,
+                Phone = o.Phone,
+                Address = o.Address,
+                TotalSum = o.Items.Sum(x => x.Price * x.Quantity)
+            });
 
-        //    return View(userOrder);
-        //}
+            return View(userOrder);
+        }
 
     }
 }
