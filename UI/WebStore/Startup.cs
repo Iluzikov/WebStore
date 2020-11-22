@@ -6,9 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Interfaces.Services;
+using WebStore.Interfaces.TestApi;
 using WebStore.Services.Products.IcCookies;
 using WebStore.Services.Products.InMemory;
 using WebStore.Services.Products.InSQL;
@@ -35,6 +37,8 @@ namespace WebStore
             services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
             services.AddScoped<ICartService, CoocieCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
+
+            services.AddTransient<IValuesService, ValuesClient>();
 
             //Подключаем идентификацию
             services.AddIdentity<User, IdentityRole>()
