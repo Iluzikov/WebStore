@@ -4,23 +4,23 @@ using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services
+namespace WebStore.Services.Products.InSQL
 {
     public class SqlProductService : IProductService
     {
         private readonly WebStoreContext _context;
 
-        public SqlProductService(WebStoreContext context) =>_context = context;
-        
+        public SqlProductService(WebStoreContext context) => _context = context;
+
         public IEnumerable<Category> GetCategories()
         {
             return _context.Categories.ToList();
         }
 
         public IEnumerable<Brand> GetBrands() => _context.Brands;
-        
+
 
         public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
@@ -32,7 +32,7 @@ namespace WebStore.Infrastructure.Services
                 query = query.Where(p => filter.Ids.Contains(p.Id));
             else
             {
-                if(filter?.BrandId != null)
+                if (filter?.BrandId != null)
                     query = query.Where(p => p.BrandId.Equals(filter.BrandId));
 
                 if (filter?.CategoryId != null)

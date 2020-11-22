@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebStore.Domain.ViewModels;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.Controllers
 {
@@ -10,11 +10,11 @@ namespace WebStore.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
-        
+
         public CartController(ICartService cartService) => _cartService = cartService;
 
 
-        public IActionResult Details() => View(new OrderDetailsViewModel { Cart = _cartService.TransformCart()});
+        public IActionResult Details() => View(new OrderDetailsViewModel { Cart = _cartService.TransformCart() });
 
         public IActionResult DecrementFromCart(int id)
         {
@@ -41,7 +41,7 @@ namespace WebStore.Controllers
         public async Task<IActionResult> CheckOut(OrderViewModel model, [FromServices] IOrderService orderService)
         {
             if (!ModelState.IsValid)
-                return View(nameof(Details), new OrderDetailsViewModel 
+                return View(nameof(Details), new OrderDetailsViewModel
                 {
                     Cart = _cartService.TransformCart(),
                     Order = model

@@ -8,8 +8,10 @@ using Microsoft.Extensions.Hosting;
 using System;
 using WebStore.DAL;
 using WebStore.Domain;
-using WebStore.Infrastructure.Interfaces;
-using WebStore.Infrastructure.Services;
+using WebStore.Interfaces.Services;
+using WebStore.Services.Products.IcCookies;
+using WebStore.Services.Products.InMemory;
+using WebStore.Services.Products.InSQL;
 
 namespace WebStore
 {

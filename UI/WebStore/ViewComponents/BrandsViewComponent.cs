@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using WebStore.Infrastructure.Interfaces;
 using WebStore.Domain.ViewModels;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.ViewComponents
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.ViewComponents
 {

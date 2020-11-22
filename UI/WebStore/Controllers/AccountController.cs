@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 using WebStore.Domain;
 using WebStore.Domain.ViewModels;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.Controllers
 {
@@ -51,13 +51,13 @@ namespace WebStore.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
 
         [HttpGet]
         public IActionResult Register() => View(new RegisterUserViewModel());
-        
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserViewModel model)
         {
@@ -65,7 +65,7 @@ namespace WebStore.Controllers
 
             var user = new User { UserName = model.UserName, Email = model.Email };
             var registrationResult = await _userManager.CreateAsync(user, model.Password);
-            
+
             if (registrationResult.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, WebStoreRole.Users);
@@ -75,7 +75,7 @@ namespace WebStore.Controllers
 
             foreach (var identityError in registrationResult.Errors) //выводим ошибки
                 ModelState.AddModelError(string.Empty, identityError.Description);
-            
+
             return View(model);
         }
 

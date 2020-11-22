@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebStore.Domain.ViewModels;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services
+namespace WebStore.Services.Products.InMemory
 {
     public class InMemoryEmployeesService : IEmployeesService
     {

@@ -8,9 +8,9 @@ using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
 using WebStore.Domain.ViewModels;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services
+namespace WebStore.Services.Products.InSQL
 {
     public class SqlOrderService : IOrderService
     {
@@ -26,10 +26,10 @@ namespace WebStore.Infrastructure.Services
         public async Task<Order> CreateOrder(OrderViewModel orderModel, CartViewModel cart, string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            if(user is null) throw new InvalidOperationException($"Пользователь {userName} на найден");
+            if (user is null) throw new InvalidOperationException($"Пользователь {userName} на найден");
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
-            
+
             var order = new Order()
             {
                 Name = orderModel.Name,
@@ -53,7 +53,7 @@ namespace WebStore.Infrastructure.Services
                 };
                 order.Items.Add(order_Item);
             }
-            
+
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
