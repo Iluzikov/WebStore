@@ -1,62 +1,74 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using WebStore.Domain.ViewModels;
+using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
 
 namespace WebStore.Services.Products.InMemory
 {
     public class InMemoryEmployeesService : IEmployeesService
     {
-        private readonly List<EmployeeViewModel> _employees = new List<EmployeeViewModel>
+        private readonly List<Employee> _employees = new List<Employee>
         {
-            new EmployeeViewModel
+            new Employee
             {
                 Id = 1,
-                FirstName = "Иван",
-                SurName = "Иванов",
+                Name = "Иван",
+                Surname = "Иванов",
                 Patronymic = "Иванович",
                 Age = 22,
-                Position = "Начальник"
+                EmployementDate = DateTime.Now
             },
-            new EmployeeViewModel
+            new Employee
             {
                 Id = 2,
-                FirstName = "Владислав",
-                SurName = "Петров",
+                Name = "Владислав",
+                Surname = "Петров",
                 Patronymic = "Иванович",
                 Age = 35,
-                Position = "Программист"
+                EmployementDate = DateTime.Now
             }
         };
 
-        public void AddNew(EmployeeViewModel model)
+        public void Add(Employee employee)
         {
-            model.Id = _employees.Max(e => e.Id) + 1;
-            _employees.Add(model);
+            if (employee is null)
+                throw new ArgumentNullException(nameof(employee));
+            employee.Id = _employees.Max(e => e.Id) + 1;
+            _employees.Add(employee);
         }
 
-        public void Commit()
-        {
+        public void Commit() { }
 
-        }
-
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             var employee = GetById(id);
             if (employee is null)
-                return;
+                return false;
 
             _employees.Remove(employee);
+            return true;
         }
 
-        public IEnumerable<EmployeeViewModel> GetAll()
+        public IEnumerable<Employee> Get() => _employees;
+
+        public void Edit(Employee employee)
         {
-            return _employees;
+            if (employee is null)
+                throw new ArgumentNullException(nameof(employee));
+
+            if (_employees.Contains(employee)) return;
+
+            var db_employee = GetById(employee.Id);
+            if (db_employee is null) return;
+
+            db_employee.Name = employee.Name;
+            db_employee.Surname = employee.Surname;
+            db_employee.Patronymic = employee.Patronymic;
+            db_employee.Age = employee.Age;
         }
 
-        public EmployeeViewModel GetById(int id)
-        {
-            return _employees.FirstOrDefault(e => e.Id.Equals(id));
-        }
+        public Employee GetById(int id) => _employees.FirstOrDefault(e => e.Id.Equals(id));
+        
     }
 }

@@ -17,11 +17,11 @@ using WebStore.Services.Products.InSQL;
 
 namespace WebStore
 {
-    public record Startup(IConfiguration _configuration)
+    public class Startup
     {
-        //private readonly IConfiguration _configuration;
-        //public Startup(IConfiguration configuration) => _configuration = configuration;
-        
+        private readonly IConfiguration _configuration;
+        public Startup(IConfiguration configuration) => _configuration = configuration;
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -29,7 +29,8 @@ namespace WebStore
             services.AddDbContext<WebStoreContext>(options => options
                 .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
+            //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
+            services.AddScoped<IEmployeesService, SqlEmployeeService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
             services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService

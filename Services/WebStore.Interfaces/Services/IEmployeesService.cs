@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using WebStore.Domain.ViewModels;
+using WebStore.Domain.Entities;
 
 namespace WebStore.Interfaces.Services
 {
@@ -9,14 +9,14 @@ namespace WebStore.Interfaces.Services
         /// Получение списка сотрудников
         /// </summary>
         /// <returns></returns>
-        IEnumerable<EmployeeViewModel> GetAll();
+        IEnumerable<Employee> Get();
 
         /// <summary>
         /// Получение сотрудника по id
         /// </summary>
         /// <param name="id">Id</param>
         /// <returns></returns>
-        EmployeeViewModel GetById(int id);
+        Employee GetById(int id);
 
         /// <summary>
         /// Сохранить изменения
@@ -26,13 +26,19 @@ namespace WebStore.Interfaces.Services
         /// <summary>
         /// Добавить нового
         /// </summary>
-        /// <param name="model"></param>
-        void AddNew(EmployeeViewModel model);
+        /// <param name="employee"></param>
+        void Add(Employee employee);
+        
+        /// <summary>
+        /// Редактирование сотрудника
+        /// </summary>
+        /// <param name="employee"></param>
+        void Edit(Employee employee);
 
         /// <summary>
         /// Удалить
         /// </summary>
         /// <param name="id"></param>
-        void Delete(int id);
+        bool Delete(int id);
     }
 }

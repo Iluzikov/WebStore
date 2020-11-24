@@ -15,9 +15,10 @@ namespace WebStore.DAL
     {
         public static void Initialize(WebStoreContext context)
         {
-            // Содает базу если ее нет
-            context.Database.EnsureCreated();
             
+            //context.Database.EnsureDeleted(); // удялаем бд со старой схемой
+            context.Database.EnsureCreated(); // Содает базу если ее нет
+
             // Если хотя бы один продукт есть в БД 
             if (context.Products.Any())
             {
