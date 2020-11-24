@@ -17,13 +17,11 @@ using WebStore.Services.Products.InSQL;
 
 namespace WebStore
 {
-    public class Startup
+    public record Startup(IConfiguration _configuration)
     {
-        private readonly IConfiguration _configuration;
-
-        public Startup(IConfiguration configuration) => _configuration = configuration;
+        //private readonly IConfiguration _configuration;
+        //public Startup(IConfiguration configuration) => _configuration = configuration;
         
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
