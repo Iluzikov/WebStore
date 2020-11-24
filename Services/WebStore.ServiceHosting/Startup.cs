@@ -53,7 +53,7 @@ namespace WebStore.ServiceHosting
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
+            services.AddScoped<IEmployeesService, SqlEmployeeService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
             services.AddScoped<IProductService, SqlProductService>();
             services.AddScoped<ICartService, CoocieCartService>();

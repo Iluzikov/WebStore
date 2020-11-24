@@ -17,7 +17,11 @@ namespace WebStore.ServiceHosting.Controllers
         }
 
         [HttpPost]
-        public void Add([FromBody]Employee employee) => _employeesService.Add(employee);
+        public void Add([FromBody] Employee employee)
+        {
+            _employeesService.Add(employee);
+            Commit();
+        }
         
         [NonAction]
         public void Commit() => _employeesService.Commit();
@@ -25,13 +29,16 @@ namespace WebStore.ServiceHosting.Controllers
         [HttpDelete("{id}")]
         public bool Delete(int id)
         {
-            return _employeesService.Delete(id);
+            var result = _employeesService.Delete(id);
+            Commit();
+            return result;
         }
 
         [HttpPut]
         public void Edit(Employee employee)
         {
             _employeesService.Edit(employee);
+            Commit();
         }
 
         [HttpGet]

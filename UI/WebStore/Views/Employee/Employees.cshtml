@@ -60,7 +60,11 @@
                         @if (isAdmin)
                         {
                             <text> | </text>
-                            @Html.ActionLink("Delete", "DeleteConfirmed", new { id = item.Id })
+                            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+
+                            @*<form asp-action="DeleteConfirmed" asp-route-id="@item.Id">
+                                <input type="submit" value="del" class="btn-danger" />
+                            </form>*@
                         }
                     </td>
                 </tr>

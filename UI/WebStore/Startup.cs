@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using WebStore.Clients.Employees;
 using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain;
@@ -30,7 +31,8 @@ namespace WebStore
                 .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
             //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
-            services.AddScoped<IEmployeesService, SqlEmployeeService>();
+            //services.AddScoped<IEmployeesService, SqlEmployeeService>();
+            services.AddScoped<IEmployeesService, EmployeesClient>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
             services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
