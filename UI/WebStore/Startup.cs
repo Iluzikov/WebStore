@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Products;
 using WebStore.Clients.Values;
 using WebStore.DAL;
 using WebStore.Domain;
@@ -35,7 +36,7 @@ namespace WebStore
             services.AddScoped<IEmployeesService, EmployeesClient>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
-            services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
+            services.AddScoped<IProductService, ProductsClient>(); //меняем реализацию на ProductsClient
             services.AddScoped<ICartService, CoocieCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
 
