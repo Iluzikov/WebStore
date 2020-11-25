@@ -18,6 +18,7 @@ namespace WebStore.Domain.DTO.Order
 
         public IEnumerable<OrderItemDTO> Items { get; set; }
     }
+
     public class OrderItemDTO
     {
         public int Id { get; set; }

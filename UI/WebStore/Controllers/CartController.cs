@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Domain.DTO.Order;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
 
@@ -47,7 +49,20 @@ namespace WebStore.Controllers
                     Order = model
                 });
 
-            var order = await orderService.CreateOrder(model, _cartService.TransformCart(), User.Identity.Name);
+            var create_order_model = new CreateOrderModel
+            {
+                Order = model,
+                Items = _cartService.TransformCart().Items
+                   .Select(item => new OrderItemDTO
+                   {
+                       Id = item.product.Id,
+                       Price = item.product.Price,
+                       Quantity = item.quantity
+                   })
+                   .ToList()
+            };
+
+            var order = await orderService.CreateOrder(create_order_model, User.Identity.Name);
             _cartService.RemoveAll();
 
             return RedirectToAction(nameof(OrderConfirmed), new { id = order.Id });

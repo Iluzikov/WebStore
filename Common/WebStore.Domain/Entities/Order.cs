@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebStore.Domain.DTO.Order;
 using WebStore.Domain.Entities.Base;
 
 namespace WebStore.Domain.Entities
@@ -14,5 +15,10 @@ namespace WebStore.Domain.Entities
         [Required]
         public virtual User User { get; set; }
         public virtual ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
+
+        public OrderDTO ToDTO()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
