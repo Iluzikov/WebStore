@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.ViewComponents
 {
@@ -17,13 +18,14 @@ namespace WebStore.ViewComponents
         private IEnumerable<BrandViewModel> GetBrands()
         {
             var dbBrands = _productService.GetBrands();
-            return dbBrands.Select(b => new BrandViewModel
+            return dbBrands
+                .Select(b => b.FromDTO())
+                .Select(b => new BrandViewModel
             {
                 Id = b.Id,
                 Name = b.Name,
                 Order = b.Order,
-                ProductsCount = 0
-            }).OrderBy(b => b.Order).ToList();
+            }).OrderBy(b => b.Order);
         }
     }
 

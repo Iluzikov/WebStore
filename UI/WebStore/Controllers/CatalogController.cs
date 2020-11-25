@@ -3,6 +3,7 @@ using System.Linq;
 using WebStore.Domain;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Controllers
 {
@@ -18,26 +19,19 @@ namespace WebStore.Controllers
         public IActionResult Shop(int? categoryId, int? brandId)
         {
             // получаем список отфильтрованных продуктов
-            var products = _productService.GetProducts(
-                new ProductFilter { BrandId = brandId, CategoryId = categoryId });
-
-            // сконвертируем в CatalogViewModel
-            var model = new CatalogViewModel()
-            {
-                BrandId = brandId,
-                CategoryId = categoryId,
-                Products = products.Select(p => new ProductViewModel()
-                {
-                    Id = p.Id,
-                    ImageUrl = p.ImageUrl,
-                    Name = p.Name,
-                    Order = p.Order,
-                    Price = p.Price,
-                    BrandName = p.Brand?.Name ?? string.Empty
-                }).OrderBy(p => p.Order).ToList()
+            var filter = new ProductFilter 
+            { 
+                BrandId = brandId, CategoryId = categoryId 
             };
+            
+            var products = _productService.GetProducts(filter);
 
-            return View(model);
+            return View(new CatalogViewModel
+            {
+                CategoryId = categoryId,
+                BrandId = brandId,
+                Products = products.FromDTO().ToView().OrderBy(p => p.Order)
+            });
         }
 
         public IActionResult ProductDetails(int id)
@@ -45,15 +39,7 @@ namespace WebStore.Controllers
             var product = _productService.GetProductById(id);
             if (product == null)
                 return NotFound();
-            return View(new ProductViewModel
-            {
-                Id = product.Id,
-                ImageUrl = product.ImageUrl,
-                Name = product.Name,
-                Order = product.Order,
-                Price = product.Price,
-                BrandName = product.Brand?.Name ?? string.Empty
-            });
+            return View(product.FromDTO().ToView());
         }
 
     }

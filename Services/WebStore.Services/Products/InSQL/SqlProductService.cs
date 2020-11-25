@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
+using WebStore.Domain.DTO.Products;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services.Products.InSQL
 {
@@ -14,15 +16,13 @@ namespace WebStore.Services.Products.InSQL
 
         public SqlProductService(WebStoreContext context) => _context = context;
 
-        public IEnumerable<Category> GetCategories()
-        {
-            return _context.Categories.ToList();
-        }
+        public IEnumerable<CategoryDTO> GetCategories() => _context.Categories.AsEnumerable().Select(c => c.ToDTO());
+        
 
-        public IEnumerable<Brand> GetBrands() => _context.Brands;
+        public IEnumerable<BrandDTO> GetBrands() => _context.Brands.AsEnumerable().Select(b => b.ToDTO());
 
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter = null)
+        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
         {
             IQueryable<Product> query = _context.Products
                 .Include(p => p.Category)
@@ -39,16 +39,17 @@ namespace WebStore.Services.Products.InSQL
                     query = query.Where(p => p.CategoryId.Equals(filter.CategoryId));
             }
 
-            return query;
+            return query.AsEnumerable().ToDTO();
 
         }
 
-        public Product GetProductById(int id)
+        public ProductDTO GetProductById(int id)
         {
             return _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
-                .FirstOrDefault(p => p.Id == id);
+                .FirstOrDefault(p => p.Id == id)
+                .ToDTO();
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebStore.Domain;
+using WebStore.Domain.DTO.Products;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services.Products.InMemory
 {
@@ -399,35 +401,26 @@ namespace WebStore.Services.Products.InMemory
             };
         }
 
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<CategoryDTO> GetCategories() => _categories.AsEnumerable().Select(c => c.ToDTO());
+        
+        public IEnumerable<BrandDTO> GetBrands() => _brands.AsEnumerable().Select(b => b.ToDTO());
+        
+        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
         {
-            return _categories;
-        }
-
-        public IEnumerable<Brand> GetBrands()
-        {
-            return _brands;
-        }
-
-        public IEnumerable<Product> GetProducts(ProductFilter filter)
-        {
-            var products = _products;
+            var query = _products;
 
             if (filter.CategoryId.HasValue)
-                products = products
+                query = query
                     .Where(p => p.CategoryId.Equals(filter.CategoryId))
                     .ToList();
             if (filter.BrandId.HasValue)
-                products = products
+                query = query
                     .Where(p => p.BrandId.HasValue && p.BrandId.Value == filter.BrandId.Value)
                     .ToList();
 
-            return products;
+            return query.ToDTO();
         }
 
-        public Product GetProductById(int id) //видимо забыл сделать..
-        {
-            throw new System.NotImplementedException();
-        }
+        public ProductDTO GetProductById(int id) => _products.FirstOrDefault(p => p.Id == id).ToDTO();
     }
 }

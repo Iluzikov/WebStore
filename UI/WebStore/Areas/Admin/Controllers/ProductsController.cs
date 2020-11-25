@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using WebStore.DAL;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
+using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Areas.Admin.Controllers
 {
@@ -16,155 +18,77 @@ namespace WebStore.Areas.Admin.Controllers
     [Authorize(Roles = WebStoreRole.Admins)]
     public class ProductsController : Controller
     {
-        private readonly WebStoreContext _context;
+        private readonly IProductService _productService;
 
-        public ProductsController(WebStoreContext context)
+        public ProductsController(IProductService productService) => _productService = productService;
+        
+
+        public IActionResult Index() => View(_productService.GetProducts().FromDTO());
+        
+        public IActionResult Details(int id)
         {
-            _context = context;
+            var product =  _productService.GetProductById(id);
+                
+            if (product == null) return NotFound();
+            
+            return View(product.FromDTO());
         }
 
-        // GET: Admin/Products
-        public async Task<IActionResult> Index()
-        {
-            var webStoreContext = _context.Products.Include(p => p.Brand).Include(p => p.Category);
-            return View(await webStoreContext.ToListAsync());
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["BrandId"] = new SelectList(_productService.Brands, "Id", "Id");
+        //    ViewData["CategoryId"] = new SelectList(_productService.Categories, "Id", "Id");
+        //    return View();
+        //}
 
-        // GET: Admin/Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Order,CategoryId,BrandId,ImageUrl,Price,Manufacturer,Id,Name")] Product product)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _productService.Add(product);
+        //        await _productService.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["BrandId"] = new SelectList(_productService.Brands, "Id", "Id", product.BrandId);
+        //    ViewData["CategoryId"] = new SelectList(_productService.Categories, "Id", "Id", product.CategoryId);
+        //    return View(product);
+        //}
+
+        // Edit
+        
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
+            var product = _productService.GetProductById(id);
+            if (product is null)
                 return NotFound();
-            }
-
-            var product = await _context.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
+            return View(product.FromDTO());
         }
 
-        // GET: Admin/Products/Create
-        public IActionResult Create()
-        {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id");
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            return View();
-        }
-
-        // POST: Admin/Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Order,CategoryId,BrandId,ImageUrl,Price,Manufacturer,Id,Name")] Product product)
+        public IActionResult Edit(Product product)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
-        }
+            if (!ModelState.IsValid) return View(product);
 
-        // GET: Admin/Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
-        }
-
-        // POST: Admin/Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Order,CategoryId,BrandId,ImageUrl,Price,Manufacturer,Id,Name")] Product product)
-        {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
-        }
-
-        // GET: Admin/Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .Include(p => p.Brand)
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
-        // POST: Admin/Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        public IActionResult Delete(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            var product = _productService.GetProductById(id);
+            if (product is null)
+                return NotFound();
+            return View(product.FromDTO());
         }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(Product product)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

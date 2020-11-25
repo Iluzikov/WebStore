@@ -23,6 +23,7 @@ namespace WebStore.ViewComponents
             // получим и заполним родительские категории
             var parentSections = categories.Where(p => !p.ParentId.HasValue).ToArray();
             var parentCategories = new List<CategoryViewModel>();
+            
             foreach (var parentCategory in parentSections)
             {
                 parentCategories.Add(new CategoryViewModel()

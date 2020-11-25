@@ -96,7 +96,7 @@ namespace WebStore.Services.Products.IcCookies
         {
             _productService = productService;
             _httpContextAccessor = httpContextAccessor;
-            _cartName = "cart" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
+            _cartName = "WebStore.Cart" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
                        ? _httpContextAccessor.HttpContext.User.Identity.Name
                        : ""); ;
         }
@@ -149,7 +149,7 @@ namespace WebStore.Services.Products.IcCookies
                 Ids = Cart.Items.Select(item => item.ProductId).ToArray()
             });
 
-            var products_view_models = products.ToView().ToDictionary(p => p.Id);
+            var products_view_models = products.FromDTO().ToView().ToDictionary(p => p.Id);
 
             return new CartViewModel
             {
