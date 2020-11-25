@@ -16,9 +16,5 @@ namespace WebStore.Domain.Entities
         public virtual User User { get; set; }
         public virtual ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        public OrderDTO ToDTO()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

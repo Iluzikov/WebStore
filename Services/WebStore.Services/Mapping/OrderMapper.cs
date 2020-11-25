@@ -11,6 +11,7 @@ namespace WebStore.Services.Mapping
             Id = order.Id,
             Phone = order.Phone,
             Address = order.Address,
+            Name = order.Name,
             Date = order.Date,
             Items = order.Items.Select(ToDTO)
         };
@@ -27,6 +28,7 @@ namespace WebStore.Services.Mapping
             Id = order.Id,
             Phone = order.Phone,
             Address = order.Address,
+            Name = order.Name,
             Date = order.Date,
             Items = order.Items.Select(FromDTO).ToArray()
         };

@@ -96,7 +96,7 @@ namespace WebStore.Services.Products.IcCookies
         {
             _productService = productService;
             _httpContextAccessor = httpContextAccessor;
-            _cartName = "WebStore.Cart" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
+            _cartName = "WebStore-Cart-" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
                        ? _httpContextAccessor.HttpContext.User.Identity.Name
                        : ""); ;
         }

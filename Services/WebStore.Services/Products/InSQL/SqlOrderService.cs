@@ -9,6 +9,7 @@ using WebStore.Domain;
 using WebStore.Domain.DTO.Order;
 using WebStore.Domain.Entities;
 using WebStore.Interfaces.Services;
+using WebStore.Services.Mapping;
 
 namespace WebStore.Services.Products.InSQL
 {
@@ -63,6 +64,7 @@ namespace WebStore.Services.Products.InSQL
 
         public async Task<OrderDTO> GetOrderById(int id) => (await _context.Orders
                 .Include(order => order.User)
+                .Include(order => order.Items)
                 .FirstOrDefaultAsync(o => o.Id.Equals(id))).ToDTO();
 
         public async Task<IEnumerable<OrderDTO>> GetUserOrders(string userName) => (await _context.Orders
