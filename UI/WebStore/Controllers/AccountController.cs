@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using WebStore.Domain;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
 
@@ -68,7 +68,7 @@ namespace WebStore.Controllers
 
             if (registrationResult.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, WebStoreRole.Users);
+                await _userManager.AddToRoleAsync(user, Role.User);
                 await _signInManager.SignInAsync(user, false); //если успешно - логинимся
                 return RedirectToAction("Index", "Home");
             }

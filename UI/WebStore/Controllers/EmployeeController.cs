@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using WebStore.Domain;
 using WebStore.Domain.Entities;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Mapping;
@@ -46,7 +46,7 @@ namespace WebStore.Controllers
         #region Edit
 
         [HttpGet]
-        [Authorize(Roles = WebStoreRole.Admins)]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Edit(int? id)
         {
             if (id is null) return View(new EmployeeViewModel());
@@ -59,7 +59,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = WebStoreRole.Admins)]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Edit(EmployeeViewModel model)
         {
             if (model is null) throw new ArgumentNullException(nameof(model));
@@ -83,7 +83,7 @@ namespace WebStore.Controllers
 
         #region Delete
 
-        [Authorize(Roles = WebStoreRole.Admins)]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Delete(int id)
         {
             if (id <= 0)
@@ -96,7 +96,7 @@ namespace WebStore.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = WebStoreRole.Admins)]
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult DeleteConfirmed(int id)
         {
             _employeesService.Delete(id);
