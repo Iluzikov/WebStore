@@ -12,9 +12,9 @@ namespace WebStore.Services.Data
     {
         private readonly WebStoreContext _db;
         private readonly UserManager<User> _UserManager;
-        private readonly RoleManager<IdentityRole> _RoleManager;
+        private readonly RoleManager<Role> _RoleManager;
 
-        public WebStoreDBInitializer(WebStoreContext db, UserManager<User> UserManager, RoleManager<IdentityRole> RoleManager)
+        public WebStoreDBInitializer(WebStoreContext db, UserManager<User> UserManager, RoleManager<Role> RoleManager)
         {
             _db = db;
             _UserManager = UserManager;

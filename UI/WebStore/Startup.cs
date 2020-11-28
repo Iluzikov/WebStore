@@ -17,6 +17,7 @@ using WebStore.Interfaces.TestApi;
 using WebStore.Services.Products.IcCookies;
 using WebStore.Services.Products.InMemory;
 using WebStore.Services.Data;
+using WebStore.Clients.Identity;
 
 namespace WebStore
 {
@@ -27,25 +28,27 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-
-            services.AddDbContext<WebStoreContext>(options => options
-                .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<WebStoreDBInitializer>();
-
-            services.AddScoped<IEmployeesService, EmployeesClient>();
-            services.AddSingleton<ICarsService, InMemoryCarsService>();
-
-            services.AddScoped<IProductService, ProductsClient>(); //меняем реализацию на ProductsClient
-            services.AddScoped<ICartService, CoocieCartService>();
-            services.AddScoped<IOrderService, OrdersClient>();
-
-            services.AddTransient<IValuesService, ValuesClient>();
-
             //Подключаем идентификацию
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<WebStoreContext>()
+            services.AddIdentity<User, Role>()
                 .AddDefaultTokenProviders();
+            //.AddEntityFrameworkStores<WebStoreContext>()
+
+            #region Custom Identity clients stores
+
+            services
+               .AddTransient<IUserStore<User>, UsersClient>()
+               .AddTransient<IUserRoleStore<User>, UsersClient>()
+               .AddTransient<IUserPasswordStore<User>, UsersClient>()
+               .AddTransient<IUserEmailStore<User>, UsersClient>()
+               .AddTransient<IUserPhoneNumberStore<User>, UsersClient>()
+               .AddTransient<IUserTwoFactorStore<User>, UsersClient>()
+               .AddTransient<IUserClaimStore<User>, UsersClient>()
+               .AddTransient<IUserLoginStore<User>, UsersClient>();
+
+            services
+               .AddTransient<IRoleStore<Role>, RolesClient>();
+
+            #endregion
 
             services.Configure<IdentityOptions>(opt =>
             {
@@ -65,7 +68,6 @@ namespace WebStore
                 opt.Lockout.MaxFailedAccessAttempts = 10;
                 opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
             });
-
             services.ConfigureApplicationCookie(options => // необязательно
             {
                 // Cookie settings
@@ -78,12 +80,27 @@ namespace WebStore
                 options.SlidingExpiration = true;
             });
 
+            services.AddMvc();
+
+            //services.AddDbContext<WebStoreContext>(options => options
+            //    .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+
+            //services.AddTransient<WebStoreDBInitializer>();
+
+            services.AddScoped<IEmployeesService, EmployeesClient>();
+            services.AddSingleton<ICarsService, InMemoryCarsService>();
+
+            services.AddScoped<IProductService, ProductsClient>(); //меняем реализацию на ProductsClient
+            services.AddScoped<ICartService, CoocieCartService>();
+            services.AddScoped<IOrderService, OrdersClient>();
+
+            services.AddTransient<IValuesService, ValuesClient>();
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDBInitializer db)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, WebStoreDBInitializer db*/)
         {
-            db.Initialize();
+            //db.Initialize();
 
             if (env.IsDevelopment())
             {
