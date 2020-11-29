@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Identity;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Products;
 using WebStore.Clients.Values;
-using WebStore.DAL;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
 using WebStore.Interfaces.TestApi;
 using WebStore.Services.Products.IcCookies;
 using WebStore.Services.Products.InMemory;
-using WebStore.Services.Data;
-using WebStore.Clients.Identity;
 
 namespace WebStore
 {
@@ -31,7 +28,6 @@ namespace WebStore
             //Подключаем идентификацию
             services.AddIdentity<User, Role>()
                 .AddDefaultTokenProviders();
-            //.AddEntityFrameworkStores<WebStoreContext>()
 
             #region Custom Identity clients stores
 
@@ -68,40 +64,33 @@ namespace WebStore
                 opt.Lockout.MaxFailedAccessAttempts = 10;
                 opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
             });
-            services.ConfigureApplicationCookie(options => // необязательно
+
+            services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.Name = "WebStore-GB";
                 options.Cookie.HttpOnly = true;
-                //options.Cookie.Expiration = TimeSpan.FromDays(10);
-                options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
-                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
-                options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
+                //options.Cookie.Expiration = TimeSpan.FromDays(10); //выдает ошибку, если включаю
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
 
             services.AddMvc();
 
-            //services.AddDbContext<WebStoreContext>(options => options
-            //    .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddTransient<WebStoreDBInitializer>();
-
             services.AddScoped<IEmployeesService, EmployeesClient>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
-            services.AddScoped<IProductService, ProductsClient>(); //меняем реализацию на ProductsClient
+            services.AddScoped<IProductService, ProductsClient>();
             services.AddScoped<ICartService, CoocieCartService>();
             services.AddScoped<IOrderService, OrdersClient>();
 
             services.AddTransient<IValuesService, ValuesClient>();
-
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env/*, WebStoreDBInitializer db*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //db.Initialize();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

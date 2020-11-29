@@ -8,8 +8,10 @@ namespace WebStore.Domain.Entities
     [Table("Brands")]
     public class Brand : NamedEntity, IOrderedEntity
     {
+        /// <summary>Очередность</summary>
         public int Order { get; set; }
 
+        /// <summary>Список Продуктов</summary>
         public virtual ICollection<Product> Products { get; set; }
 
     }
