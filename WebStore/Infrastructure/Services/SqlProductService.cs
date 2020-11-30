@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using WebStore.DAL;
 using WebStore.Domain;
@@ -11,31 +12,44 @@ namespace WebStore.Infrastructure.Services
     {
         private readonly WebStoreContext _context;
 
-        public SqlProductService(WebStoreContext context)
-        {
-            _context = context;
-        }
+        public SqlProductService(WebStoreContext context) =>_context = context;
+        
 
         public IEnumerable<Category> GetCategories()
         {
             return _context.Categories.ToList();
         }
 
-        public IEnumerable<Brand> GetBrands()
+        public IEnumerable<Brand> GetBrands() => _context.Brands;
+        
+
+        public IEnumerable<Product> GetProducts(ProductFilter filter = null)
         {
-            return _context.Brands.ToList();
+            IQueryable<Product> query = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand);
+
+            if (filter?.Ids?.Length > 0)
+                query = query.Where(p => filter.Ids.Contains(p.Id));
+            else
+            {
+                if(filter?.BrandId != null)
+                    query = query.Where(p => p.BrandId.Equals(filter.BrandId));
+
+                if (filter?.CategoryId != null)
+                    query = query.Where(p => p.CategoryId.Equals(filter.CategoryId));
+            }
+
+            return query;
+
         }
 
-        public IEnumerable<Product> GetProducts(ProductFilter filter)
+        public Product GetProductById(int id)
         {
-            var query = _context.Products.AsQueryable();
-            if (filter.BrandId.HasValue)
-                query = query.Where(c => c.BrandId.HasValue && c.BrandId.Value.Equals(filter.BrandId.Value));
-            if (filter.CategoryId.HasValue)
-                query = query.Where(c => c.CategoryId.Equals(filter.CategoryId.Value));
-
-            return query.ToList();
-
+            return _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .FirstOrDefault(p => p.Id == id);
         }
     }
 }

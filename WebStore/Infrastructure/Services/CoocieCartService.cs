@@ -3,7 +3,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebStore.Domain;
 using WebStore.Infrastructure.Interfaces;
+using WebStore.Infrastructure.Mapping;
 using WebStore.ViewModels;
 
 namespace WebStore.Infrastructure.Services
@@ -135,33 +137,24 @@ namespace WebStore.Infrastructure.Services
         {
             var cart = Cart;
             var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-            if (item == null)
-                return;
+            if (item == null) return;
             cart.Items.Remove(item);
             Cart = cart;
         }
 
         public CartViewModel TransformCart()
         {
-            var product = _productService.GetProducts(new Domain.ProductFilter()
+            var products = _productService.GetProducts(new ProductFilter
             {
-                Ids = Cart.Items.Select(i => i.ProductId).ToList()
-            }).Select(p => new ProductViewModel()
-            {
-                Id = p.Id,
-                ImageUrl = p.ImageUrl,
-                Name = p.Name,
-                Order = p.Order,
-                Price = p.Price,
-            }).ToList();
+                Ids = Cart.Items.Select(item => item.ProductId).ToArray()
+            });
 
-            var r = new CartViewModel
+            var products_view_models = products.ToView().ToDictionary(p => p.Id);
+
+            return new CartViewModel
             {
-                Items = Cart.Items.ToDictionary(
-                    x => product.First(y => y.Id == x.ProductId),
-                    x => x.Quantity)
+                Items = Cart.Items.Select(item => (products_view_models[item.ProductId], item.Quantity))
             };
-            return r;
         }
     }
 }

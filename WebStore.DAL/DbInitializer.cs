@@ -237,6 +237,7 @@ namespace WebStore.DAL
                     ParentId = null
                 }
             };
+            
             using (var trans = context.Database.BeginTransaction())
             {
                 foreach (var section in categories)
@@ -244,9 +245,9 @@ namespace WebStore.DAL
                     context.Categories.Add(section);
                 }
 
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Categories] ON");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Categories] ON");
                 context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Categories] OFF");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Categories] OFF");
                 trans.Commit();
             }
 
@@ -302,9 +303,9 @@ namespace WebStore.DAL
                     context.Brands.Add(brand);
                 }
 
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Brands] ON");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
                 context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Brands] OFF");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
                 trans.Commit();
             }
 
@@ -437,9 +438,9 @@ namespace WebStore.DAL
                 {
                     context.Products.Add(product);
                 }
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Products] ON");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
                 context.SaveChanges();
-                context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Products] OFF");
+                context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
                 trans.Commit();
             }
         }
@@ -448,10 +449,10 @@ namespace WebStore.DAL
         public static void InitializeUsers(IServiceProvider services)
         {
             var roleManager = services.GetService<RoleManager<IdentityRole>>();
-            EnsureRole(roleManager, WebStoreUserRoles.Users);
-            EnsureRole(roleManager, WebStoreUserRoles.Admins);
+            EnsureRole(roleManager, WebStoreRole.Users);
+            EnsureRole(roleManager, WebStoreRole.Admins);
 
-            EnsureRoleToUser(services, "Admin", WebStoreUserRoles.Admins, "admin@123");
+            EnsureRoleToUser(services, "Admin", WebStoreRole.Admins, "admin@123");
         }
 
         private static void EnsureRoleToUser(IServiceProvider services, string userName, string roleName, string password)

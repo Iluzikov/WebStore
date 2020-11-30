@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+п»їusing Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +17,9 @@ namespace WebStore
     {
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => _configuration = configuration;
+        
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -33,37 +29,43 @@ namespace WebStore
 
             services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
-            services.AddScoped<IProductService, SqlProductService>(); //меняем реализацию на SqlProductService
-            services.AddScoped<ICartService, CoocieCartService>(); 
 
-            //Подключаем идентификацию
+            services.AddScoped<IProductService, SqlProductService>(); //РјРµРЅСЏРµРј СЂРµР°Р»РёР·Р°С†РёСЋ РЅР° SqlProductService
+            services.AddScoped<ICartService, CoocieCartService>();
+            services.AddScoped<IOrderService, SqlOrderService>();
+
+            //РџРѕРґРєР»СЋС‡Р°РµРј РёРґРµРЅС‚РёС„РёРєР°С†РёСЋ
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<WebStoreContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options => // необязательно
+            services.Configure<IdentityOptions>(options => // РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
             {
                 // Password settings
+#if DEBUG
+                options.Password.RequiredLength = 3;
                 options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 5;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredUniqueChars = 3;
+#endif
 
                 // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 options.Lockout.AllowedForNewUsers = true;
 
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.ConfigureApplicationCookie(options => // необязательно
+            services.ConfigureApplicationCookie(options => // РЅРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
             {
                 // Cookie settings
+                options.Cookie.Name = "WebStore-GB";
                 options.Cookie.HttpOnly = true;
-                //options.Cookie.Expiration = TimeSpan.FromDays(150);
+                //options.Cookie.Expiration = TimeSpan.FromDays(10);
                 options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
                 options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
                 options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
@@ -71,7 +73,6 @@ namespace WebStore
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -83,9 +84,12 @@ namespace WebStore
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseWelcomePage("/welcome");
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }

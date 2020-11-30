@@ -1,4 +1,4 @@
-﻿@model CartViewModel
+﻿@model OrderDetailsViewModel
 @{
     ViewData["Title"] = "Корзина";
 }
@@ -24,40 +24,40 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Items)
+                    @foreach (var (product, quantity) in Model.Cart.Items)
                     {
                         <tr>
                             <td class="cart_product">
                                 <a href="">
-                                    <img src="~/images/shop/@item.Key.ImageUrl" alt="">
+                                    <img src="~/images/shop/@product.ImageUrl" alt="">
                                 </a>
                             </td>
                             <td class="cart_description">
                                 <h4>
                                     <a asp-action="ProductDetails"
                                        asp-controller="Catalog"
-                                       asp-route-id="@item.Key.Id">
-                                        @item.Key.Name
+                                       asp-route-id="@product.Id">
+                                        @product.Name
                                     </a>
                                 </h4>
-                                <p>Артикул: 1089772</p>
+                                <p>Артикул: @product.Id.ToString("0000000")</p>
                             </td>
                             <td class="cart_price">
-                                <p>@(item.Key.Price.ToString("C"))</p>
+                                <p>@product.Price.ToString("C"))</p>
                             </td>
                             <td class="cart_quantity">
                                 <div class="cart_quantity_button">
                                     <a asp-controller="Cart"
                                        asp-action="AddToCart"
-                                       asp-route-id="@item.Key.Id"
+                                       asp-route-id="@product.Id"
                                        asp-route-returnUrl="@Context.Request.Path"
                                        class="cart_quantity_up">
                                         +
                                     </a>
-                                    <input class="cart_quantity_input" type="text" name="quantity" value="@item.Value" autocomplete="off" size="2">
+                                    <input class="cart_quantity_input" type="text" name="quantity" value="@quantity" autocomplete="off" size="2">
                                     <a asp-controller="Cart"
                                        asp-action="DecrementFromCart"
-                                       asp-route-id="@item.Key.Id"
+                                       asp-route-id="@product.Id"
                                        class="cart_quantity_down">
                                         -
                                     </a>
@@ -65,14 +65,14 @@
                             </td>
                             <td class="cart_total">
                                 <p class="cart_total_price">
-                                    @((item.Value * item.Key.Price).ToString("C"))
+                                    @((quantity * product.Price).ToString("C"))
                                 </p>
                             </td>
                             <td class="cart_delete">
                                 <a class="cart_quantity_delete"
                                    asp-controller="Cart"
                                    asp-action="RemoveFromCart"
-                                   asp-route-id="@item.Key.Id">
+                                   asp-route-id="@product.Id">
                                     <i class="fa fa-times"></i>
                                 </a>
                             </td>
@@ -83,4 +83,15 @@
             </table>
         </div>
     </section> <!--/#cart_items-->
+    <section id="do_action">
+        <div class="container">
+            <div class="heading">
+                <h3>Оформите заказ</h3>
+            </div>
+            <div class="row login-form">
+                <partial name="_OrderPartial" model="@Model.Order" view-data="@(new ViewDataDictionary(ViewData) { { "TotalPrice", Model.Cart.TotalPrice } })" />
+            </div>
+        </div>
+</section>
+
 </div>
