@@ -7,50 +7,51 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.IO;
 using WebStore.DAL;
-using WebStore.Domain;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
-using WebStore.Interfaces.TestApi;
+using WebStore.Services.Data;
 using WebStore.Services.Products.IcCookies;
 using WebStore.Services.Products.InMemory;
 using WebStore.Services.Products.InSQL;
 
 namespace WebStore.ServiceHosting
 {
-    public record Startup(IConfiguration _configuration)
+    public class Startup
     {
-        //public Startup(IConfiguration configuration) => _configuration = configuration;
-        //public IConfiguration _configuration { get; }
+        public Startup(IConfiguration configuration) => _configuration = configuration;
+        public IConfiguration _configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebStoreContext>(options => options
                 .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddTransient<WebStoreDBInitializer>();
+
             //Подключаем идентификацию
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, Role>(opt => { })
                 .AddEntityFrameworkStores<WebStoreContext>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options => // необязательно
+            services.Configure<IdentityOptions>(opt =>
             {
-                // Password settings
 #if DEBUG
-                options.Password.RequiredLength = 3;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredUniqueChars = 3;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 3;
+
 #endif
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-                // Lockout settings
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.AllowedForNewUsers = true;
-
-                // User settings
-                options.User.RequireUniqueEmail = true;
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
             });
 
             services.AddScoped<IEmployeesService, SqlEmployeeService>();
@@ -62,13 +63,26 @@ namespace WebStore.ServiceHosting
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.ServiceHosting", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.WebAPI", Version = "v1" });
+
+                const string webstore_api_xml = "WebStore.ServiceHosting.xml";
+                const string webstore_domain_xml = "WebStore.Domain.xml";
+                const string debug_path = "bin/Debug/net5.0";
+
+                if (File.Exists(webstore_domain_xml))
+                    c.IncludeXmlComments(webstore_domain_xml);
+                else if (File.Exists(Path.Combine(debug_path, webstore_domain_xml)))
+                    c.IncludeXmlComments(Path.Combine(debug_path, webstore_domain_xml));
+
+                c.IncludeXmlComments(webstore_api_xml);
             });
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDBInitializer db)
         {
+            db.Initialize();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

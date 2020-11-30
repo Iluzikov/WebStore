@@ -3,7 +3,7 @@
         @if (User.Identity.IsAuthenticated)
         {
 
-            @if (User.IsInRole(WebStoreRole.Admins))
+            @if (User.IsInRole(Role.Administrator))
             {
                 <li><a asp-action="Index" asp-controller="Home" asp-area="Admin"><i class="fa fa-key"></i>Админка</a></li>
             }

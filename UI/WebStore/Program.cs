@@ -14,32 +14,12 @@ namespace WebStore
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            var host = BuildWebHost(args);
+        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    WebStoreContext context = services.GetRequiredService<WebStoreContext>();
-                    DbInitializer.Initialize(context);
-                    DbInitializer.InitializeUsers(services);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Что то пошло не так при инициализации БД");
-                }
-            }
-
-            host.Run();
-        }
-
-        private static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(host => host
+                   .UseStartup<Startup>()
+                );
     }
 }

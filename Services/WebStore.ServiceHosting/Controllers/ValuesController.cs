@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace WebStore.ServiceHosting.Controllers
 {
-    //[Route("api/[controller]")]
+    /// <summary>Тестовый API</summary>
     [Route("api/v1/values")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -13,9 +13,18 @@ namespace WebStore.ServiceHosting.Controllers
             .Select(i => $"Value {i}")
             .ToList();
 
+        /// <summary>
+        /// Получение списка значений
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IEnumerable<string> Get() => _values;
 
+        /// <summary>
+        /// Получение значения по идентификатору
+        /// </summary>
+        /// <param name="id">Идентификатор значения</param>
+        /// <returns>Значение</returns>
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
@@ -27,9 +36,19 @@ namespace WebStore.ServiceHosting.Controllers
             return _values[id];
         }
 
+        /// <summary>
+        /// Добавить значение в список
+        /// </summary>
+        /// <param name="value">Значение</param>
         [HttpPost]
         public void Post([FromBody] string value) => _values.Add(value);
 
+        /// <summary>
+        /// Редактирование значения
+        /// </summary>
+        /// <param name="id">Идентификатор значения</param>
+        /// <param name="value">Значение</param>
+        /// <returns>Истина если редактирование успешно</returns>
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] string value)
         {
@@ -40,6 +59,11 @@ namespace WebStore.ServiceHosting.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Удаление значения из списка
+        /// </summary>
+        /// <param name="id">Идентификатор значения</param>
+        /// <returns>Истина если удаление успешно</returns>
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

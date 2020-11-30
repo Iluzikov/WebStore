@@ -1,22 +1,20 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Identity;
 using WebStore.Clients.Orders;
 using WebStore.Clients.Products;
 using WebStore.Clients.Values;
-using WebStore.DAL;
-using WebStore.Domain;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
 using WebStore.Interfaces.TestApi;
 using WebStore.Services.Products.IcCookies;
 using WebStore.Services.Products.InMemory;
-using WebStore.Services.Products.InSQL;
 
 namespace WebStore
 {
@@ -27,59 +25,68 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-
-            services.AddDbContext<WebStoreContext>(options => options
-                .UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-
-            //services.AddSingleton<IEmployeesService, InMemoryEmployeesService>();
-            //services.AddScoped<IEmployeesService, SqlEmployeeService>();
-            services.AddScoped<IEmployeesService, EmployeesClient>();
-            services.AddSingleton<ICarsService, InMemoryCarsService>();
-
-            services.AddScoped<IProductService, ProductsClient>(); //меняем реализацию на ProductsClient
-            services.AddScoped<ICartService, CoocieCartService>();
-            services.AddScoped<IOrderService, OrdersClient>();
-
-            services.AddTransient<IValuesService, ValuesClient>();
-
             //Подключаем идентификацию
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<WebStoreContext>()
+            services.AddIdentity<User, Role>()
                 .AddDefaultTokenProviders();
 
-            services.Configure<IdentityOptions>(options => // необязательно
+            #region Custom Identity clients stores
+
+            services
+               .AddTransient<IUserStore<User>, UsersClient>()
+               .AddTransient<IUserRoleStore<User>, UsersClient>()
+               .AddTransient<IUserPasswordStore<User>, UsersClient>()
+               .AddTransient<IUserEmailStore<User>, UsersClient>()
+               .AddTransient<IUserPhoneNumberStore<User>, UsersClient>()
+               .AddTransient<IUserTwoFactorStore<User>, UsersClient>()
+               .AddTransient<IUserClaimStore<User>, UsersClient>()
+               .AddTransient<IUserLoginStore<User>, UsersClient>();
+
+            services
+               .AddTransient<IRoleStore<Role>, RolesClient>();
+
+            #endregion
+
+            services.Configure<IdentityOptions>(opt =>
             {
-                // Password settings
 #if DEBUG
-                options.Password.RequiredLength = 3;
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredUniqueChars = 3;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 3;
+
 #endif
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-                // Lockout settings
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.AllowedForNewUsers = true;
-
-                // User settings
-                options.User.RequireUniqueEmail = true;
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
             });
 
-            services.ConfigureApplicationCookie(options => // необязательно
+            services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.Name = "WebStore-GB";
                 options.Cookie.HttpOnly = true;
-                //options.Cookie.Expiration = TimeSpan.FromDays(10);
-                options.LoginPath = "/Account/Login"; // If the LoginPath is not set here, ASP.NET Core will default to /Account/Login
-                options.LogoutPath = "/Account/Logout"; // If the LogoutPath is not set here, ASP.NET Core will default to /Account/Logout
-                options.AccessDeniedPath = "/Account/AccessDenied"; // If the AccessDeniedPath is not set here, ASP.NET Core will default to /Account/AccessDenied
+                //options.Cookie.Expiration = TimeSpan.FromDays(10); //выдает ошибку, если включаю
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            services.AddMvc();
+
+            services.AddScoped<IEmployeesService, EmployeesClient>();
+            services.AddSingleton<ICarsService, InMemoryCarsService>();
+
+            services.AddScoped<IProductService, ProductsClient>();
+            services.AddScoped<ICartService, CoocieCartService>();
+            services.AddScoped<IOrderService, OrdersClient>();
+
+            services.AddTransient<IValuesService, ValuesClient>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebStore.DAL;
-using WebStore.Domain;
 using WebStore.Domain.Entities;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Mapping;
 
 namespace WebStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = WebStoreRole.Admins)]
+    [Authorize(Roles = Role.Administrator)]
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
