@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebStore.Domain
+﻿namespace WebStore.Domain
 {
     /// <summary>
     /// Класс для фильтрации товаров
@@ -12,5 +8,4 @@ namespace WebStore.Domain
         public int? CategoryId { get; set; }
         public int? BrandId { get; set; }
     }
-
 }
