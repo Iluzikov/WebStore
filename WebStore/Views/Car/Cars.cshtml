@@ -1,11 +1,12 @@
-﻿@model IEnumerable<EmployeeViewModel>
+﻿@model IEnumerable<CarViewModel>
 
 @{
-    ViewData["Title"] = "Employees";
+    ViewData["Title"] = "Cars";
 }
 
+
 <div class="container">
-    <h2>Employees</h2>
+    <h2>Cars</h2>
 
     <p>
         <a asp-action="Edit" class="btn btn-success">Добавить</a>
@@ -17,10 +18,10 @@
                     @Html.DisplayNameFor(model => model.Id)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
+                    @Html.DisplayNameFor(model => model.Brand)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.SurName)
+                    @Html.DisplayNameFor(model => model.Model)
                 </th>
                 <th></th>
             </tr>
@@ -33,19 +34,18 @@
                         @Html.DisplayFor(modelItem => item.Id)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
+                        @Html.DisplayFor(modelItem => item.Brand)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SurName)
+                        @Html.DisplayFor(modelItem => item.Model)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Детали", "CarDetails", new { id = item.Id }) |
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-
 </div>
