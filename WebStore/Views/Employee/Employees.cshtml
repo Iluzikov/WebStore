@@ -2,13 +2,17 @@
 
 @{
     ViewData["Title"] = "Employees";
+    var isAdmin = User.IsInRole(WebStoreUserRoles.Admins); //проверяем у пользователя роль админа
+    var IsAuth = User.Identity.IsAuthenticated; // проверяем аутентификацию пользователя
 }
 
 <div class="container">
     <h2>Employees</h2>
-
     <p>
-        <a asp-action="Edit" class="btn btn-success">Добавить</a>
+        @if (isAdmin)
+        {
+            <a asp-action="Edit" class="btn btn-success">Добавить</a>
+        }
     </p>
     <table class="table">
         <thead>
@@ -39,9 +43,25 @@
                         @Html.DisplayFor(modelItem => item.SurName)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        @if (isAdmin)
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                            <text> | </text>
+                        }
+
+                        @if (IsAuth)
+                        {
+                            @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id })
+                        }
+                        else
+                        {
+                            <text>(для просмотра деталей войдите в систему)</text>
+                        }
+                        @if (isAdmin)
+                        {
+                            <text> | </text>
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        }
                     </td>
                 </tr>
             }

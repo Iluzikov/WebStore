@@ -80,6 +80,7 @@ namespace WebStore.Controllers
                     return View(model);
                 }
             }
+            await _userManager.AddToRoleAsync(user, WebStoreUserRoles.Users);
             await _signInManager.SignInAsync(user, false); //если успешно - логинимся
             return RedirectToAction("Index", "Home");
         }
