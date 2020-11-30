@@ -1,0 +1,55 @@
+﻿@model WebStore.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "EmployeeDetails";
+}
+<div class="container">
+    <h2>EmployeeDetails</h2>
+
+    <div>
+        <h4>EmployeeViewModel</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.SurName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.SurName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Patronymic)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Patronymic)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Age)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Position)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Position)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id /* id = Model.PrimaryKey */ }) |
+        <a asp-controller="Employee" asp-action="Employees">Back to List</a>
+    </div>
+</div>

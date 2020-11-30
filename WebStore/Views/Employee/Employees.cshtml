@@ -1,0 +1,51 @@
+﻿@model IEnumerable<WebStore.ViewModels.EmployeeViewModel>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="container">
+    <h2>Employees</h2>
+
+    <p>
+        <a asp-action="Edit" class="btn btn-success">Добавить</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SurName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SurName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
