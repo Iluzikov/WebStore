@@ -1,0 +1,19 @@
+﻿<div class="shop-menu pull-right">
+    <div><ul class="nav navbar-nav">
+        @if (User.Identity.IsAuthenticated)
+        {
+
+            @if (User.IsInRole(WebStoreRole.Admins))
+            {
+                <li><a asp-action="Index" asp-controller="Home" asp-area="Admin"><i class="fa fa-key"></i>Админка</a></li>
+            }
+            <li><a asp-controller="Account" asp-action="Logout"><i class="fa fa-sign-out"></i>Выход</a></li>
+        }
+        else
+        {
+            <li><a asp-action="Login" asp-controller="Account"><i class="fa fa-sign-in"></i>Вход</a></li>
+            <li><a asp-action="Register" asp-controller="Account"><i class="fa fa-plus"></i>Регистрация</a></li>
+            
+        }
+    </ul></div>
+</div>

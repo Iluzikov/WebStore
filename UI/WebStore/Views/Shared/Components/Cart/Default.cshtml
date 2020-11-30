@@ -1,0 +1,14 @@
+﻿@model CartViewModel
+
+@if (Model.ItemsCount > 0)
+{
+    <a asp-controller="Cart" asp-action="Details" style="color: #fe980f">
+        <i class="fa fa-shopping-cart color="></i>
+        Товары <small>(@Model.ItemsCount шт.)</small> 
+        <p><small>@Model.TotalPrice.ToString("C") </small></p>
+    </a>
+}
+else
+{
+    <a asp-controller="Cart" asp-action="Details"><i class="fa fa-shopping-cart"></i> Cart</a>
+}

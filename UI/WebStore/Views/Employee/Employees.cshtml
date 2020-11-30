@@ -1,0 +1,75 @@
+﻿@model IEnumerable<EmployeeViewModel>
+
+@{
+    ViewData["Title"] = "Employees";
+    var isAdmin = User.IsInRole(WebStoreRole.Admins); //проверяем у пользователя роль админа
+    var IsAuth = User.Identity.IsAuthenticated; // проверяем аутентификацию пользователя
+}
+
+<div class="container">
+    <h2>Employees</h2>
+    <p>
+        @if (isAdmin)
+        {
+            <a asp-action="Edit" class="btn btn-success">Добавить</a>
+        }
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @if (isAdmin)
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                            <text> | </text>
+                        }
+
+                        @if (IsAuth)
+                        {
+                            @Html.ActionLink("Details", "EmployeeDetails", new { id = item.Id })
+                        }
+                        else
+                        {
+                            <text>(для просмотра деталей войдите в систему)</text>
+                        }
+                        @if (isAdmin)
+                        {
+                            <text> | </text>
+                            @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+
+                            @*<form asp-action="DeleteConfirmed" asp-route-id="@item.Id">
+                                <input type="submit" value="del" class="btn-danger" />
+                            </form>*@
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
