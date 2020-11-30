@@ -28,6 +28,15 @@ namespace WebStore.Controllers
                 Patronymic = "Владимирович",
                 Age = 30,
                 Position = "Дизайнер"
+            },
+            new EmployeeViewModel
+            {
+                Id = 3,
+                FirstName = "Эдуард",
+                SureName = "Суровый",
+                Patronymic = "Вениаминович",
+                Age = 30,
+                Position = "Бард"
             }
         };
 
