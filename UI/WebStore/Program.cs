@@ -20,6 +20,8 @@ namespace WebStore
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(host => host
                    .UseStartup<Startup>()
+                    //.ConfigureLogging(log => log
+                    //.AddConsole())
                 );
     }
 }

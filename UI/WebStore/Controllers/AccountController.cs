@@ -91,7 +91,7 @@ namespace WebStore.Controllers
                     await _userManager.AddToRoleAsync(user, Role.User);
                     _logger.LogInformation("Пользователю {0} назначена роль {1}", model.UserName, Role.User);
                     await _signInManager.SignInAsync(user, false); //если успешно - логинимся
-                    _logger.LogInformation("Пользователь {0} автоматически вощел в аккаунт в первый раз", model.UserName);
+                    _logger.LogInformation("Пользователь {0} автоматически вошел в аккаунт в первый раз", model.UserName);
                     return RedirectToAction("Index", "Home");
                 }
 
