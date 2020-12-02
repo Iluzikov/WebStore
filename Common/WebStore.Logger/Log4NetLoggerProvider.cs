@@ -9,10 +9,7 @@ namespace WebStore.Logger
         private readonly string _configurationFile;
         private readonly ConcurrentDictionary<string, Log4NetLogger> _loggers = new ConcurrentDictionary<string, Log4NetLogger>();
 
-        public Log4NetLoggerProvider(string configurationFile)
-        {
-            _configurationFile = configurationFile;
-        }
+        public Log4NetLoggerProvider(string configurationFile) => _configurationFile = configurationFile;
 
         public ILogger CreateLogger(string categoryName) =>
             _loggers.GetOrAdd(categoryName, category =>

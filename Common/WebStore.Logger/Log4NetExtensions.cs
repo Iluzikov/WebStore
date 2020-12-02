@@ -13,8 +13,10 @@ namespace WebStore.Logger
             {
                 var assembly = Assembly.GetEntryAssembly() ??
                     throw new InvalidOperationException("Не удалось определить сборку с точкой входа в приложение");
+
                 var dir = Path.GetDirectoryName(assembly.Location) ?? 
                     throw new InvalidOperationException("Не удалось определить путь размещения сборки с точкой входа в приложение");
+
                 configurationFile = Path.Combine(dir, configurationFile);
             }
             factory.AddProvider(new Log4NetLoggerProvider(configurationFile));

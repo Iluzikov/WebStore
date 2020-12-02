@@ -24,10 +24,7 @@ namespace WebStore.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string ReturnUrl)
-        {
-            return View(new LoginViewModel { ReturnUrl = ReturnUrl });
-        }
+        public IActionResult Login(string ReturnUrl) => View(new LoginViewModel() { ReturnUrl = ReturnUrl });
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -45,6 +42,7 @@ namespace WebStore.Controllers
                 if (loginResult.Succeeded)
                 {
                     _logger.LogInformation("Пользователь успешно вошел в систему");
+
                     if (Url.IsLocalUrl(model.ReturnUrl)) //если ReturnUrl - локальный
                     {
                         _logger.LogInformation("Перенаправляем вошедшего пользователя {0} на адрес {1}",

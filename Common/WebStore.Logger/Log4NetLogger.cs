@@ -19,7 +19,7 @@ namespace WebStore.Logger
             log4net.Config.XmlConfigurator.Configure(logger_repository, configuration);
         }
 
-        public IDisposable BeginScope<TState>(TState state) => throw new NotImplementedException();
+        public IDisposable BeginScope<TState>(TState state) => null;
 
         public bool IsEnabled(LogLevel logLevel)
         {
@@ -84,8 +84,7 @@ namespace WebStore.Logger
                     _log.Fatal(log_message, exception);
                     break;
 
-                case LogLevel.None:
-                    break;
+                case LogLevel.None: break;
                 default: throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, null);
             }
         }
