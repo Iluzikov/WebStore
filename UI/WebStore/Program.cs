@@ -15,7 +15,7 @@ namespace WebStore
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(host => host
                    .UseStartup<Startup>()
-                    .UseSerilog((host, log) => log.ReadFrom.Configuration(host.Configuration)
+                    .UseSerilog((host, log) => log.ReadFrom.Configuration(host.Configuration) //конфигурирование библиотеки Serilog
                     .MinimumLevel.Debug()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
                     .Enrich.FromLogContext()
