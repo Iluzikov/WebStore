@@ -117,6 +117,19 @@ namespace WebStore.Tests.Controllers
             Assert.Equal($"Исключение: {exception_message}", error.Message);
         }
 
+        [TestMethod]
+        public void ErrorStatus_404_RedirectTo_PageNotFound()
+        {
+            var controller = new HomeController();
+            const string ststus_code_404 = "404";
+            const string expected_method_name = nameof(HomeController.PageNotFound);
 
+            var result = controller.ErrorStatus(ststus_code_404);
+            //Assert.NotNull(result);
+
+            var redirect_to_action = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(expected_method_name, redirect_to_action.ActionName);
+            Assert.Null(redirect_to_action.ControllerName);
+        }
     }
 }

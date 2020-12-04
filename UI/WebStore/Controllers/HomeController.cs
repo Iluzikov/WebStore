@@ -27,6 +27,6 @@ namespace WebStore.Controllers
             "404" => RedirectToAction(nameof(PageNotFound)),
             _ => Content($"Error {Code}")
         };
-        
+
     }
 }
