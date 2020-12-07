@@ -10,7 +10,7 @@ using WebStore.Services.Mapping;
 
 namespace WebStore.Services.Products.IcCookies
 {
-    public class CoocieCartService : ICartService
+    public class CookiesCartService : ICartService
     {
         private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -92,7 +92,7 @@ namespace WebStore.Services.Products.IcCookies
             }
         }
 
-        public CoocieCartService(IProductService productService, IHttpContextAccessor httpContextAccessor)
+        public CookiesCartService(IProductService productService, IHttpContextAccessor httpContextAccessor)
         {
             _productService = productService;
             _httpContextAccessor = httpContextAccessor;

@@ -3,10 +3,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using WebStore.Domain.ViewModels;
+using WebStore.Interfaces.Services;
 
 namespace WebStore.Services.Products.IcCookies
 {
-    public class CookiesCartStore
+    public class CookiesCartStore : ICartStore
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _cartName;
