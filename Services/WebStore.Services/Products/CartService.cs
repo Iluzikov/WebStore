@@ -47,7 +47,9 @@ namespace WebStore.Services.Products.IcCookies
 
         public void RemoveAll()
         {
-            _cartStore.Cart = new Cart { Items = new List<CartItem>() };
+            var cart = _cartStore.Cart;
+            cart.Items.Clear();
+            _cartStore.Cart = cart;
         }
 
         public void RemoveFromCart(int id)
