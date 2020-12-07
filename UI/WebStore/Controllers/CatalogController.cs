@@ -11,10 +11,7 @@ namespace WebStore.Controllers
     {
         private readonly IProductService _productService;
 
-        public CatalogController(IProductService productService)
-        {
-            _productService = productService;
-        }
+        public CatalogController(IProductService productService) => _productService = productService;
 
         public IActionResult Shop(int? categoryId, int? brandId)
         {
