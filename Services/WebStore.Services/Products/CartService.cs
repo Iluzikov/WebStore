@@ -35,10 +35,12 @@ namespace WebStore.Services.Products.IcCookies
         {
             var cart = _cartStore.Cart;
             var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-            if (item == null)
-                return;
-            if (item.Quantity > 0)
-                item.Quantity--;
+            
+            if (item == null) return;
+
+            //if (item.Quantity > 0)
+            //    item.Quantity--;
+            
             if (item.Quantity == 0)
                 cart.Items.Remove(item);
 
