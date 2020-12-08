@@ -4,12 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
-    <!-- BOOTSTRAP STYLES-->
-    <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.css" />
-    <!-- FONTAWESOME STYLES-->
-    <link href="~/css/font-awesome.min.css" rel="stylesheet">
-    <!-- CUSTOM STYLES-->
-    <link href="~/admin/assets/css/custom.css" rel="stylesheet" />
+
+    <invironment include="Development">
+        <!-- BOOTSTRAP STYLES-->
+        <link href="~/admin/assets/css/bootstrap.css" rel="stylesheet" />
+        <!-- FONTAWESOME STYLES-->
+        <link href="~/admin/assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+        <link href="~/admin/assets/css/custom.css" rel="stylesheet" />
+    </invironment>
+
+    <invironment exclude="Development">
+        <link href="~/admin/assets/css/site.min.css" rel="stylesheet" asp-append-version="true">
+    </invironment>
+
     <!-- GOOGLE FONTS-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
@@ -39,13 +47,19 @@
                     <li>
                         <a asp-action="Index" asp-controller="Home" asp-area="Admin">
                             <i class="fa fa-desktop ">
-                            </i>Dashboard <span class="badge">Included</span>
+                            </i>Dashboard <span class="badge">!</span>
                         </a>
                     </li>
                     <li>
                         <a asp-action="Index" asp-controller="Products" asp-area="Admin">
                             <i class="fa fa-edit ">
-                            </i>Редактор продуктов <span class="badge">Included</span>
+                            </i>Редактор продуктов <span class="badge">!</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Home" asp-area="">
+                            <i class="fa fa-edit ">
+                            </i>Вернуться на сайт <span class="badge">!</span>
                         </a>
                     </li>
                 </ul>
@@ -70,17 +84,24 @@
     <div class="footer">
         <div class="row">
             <div class="col-lg-12">
-                &copy;  2014 yourdomain.com | Design by: <a href="http://binarytheme.com" style="color:#fff;" target="_blank">www.binarytheme.com</a>
+                &copy;  2014 WebStore | Design by: <a href="http://binarytheme.com" style="color:#fff;" target="_blank">www.binarytheme.com</a>
             </div>
         </div>
     </div>
     <!-- /. WRAPPER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
-    <!-- JQUERY SCRIPTS -->
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <!-- BOOTSTRAP SCRIPTS -->
-    <script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
-    <!-- CUSTOM SCRIPTS -->
-    <script src="~/admin/assets/js/custom.js"></script>
+    <invironment include="Development">
+        <!-- JQUERY SCRIPTS -->
+        <script src="~/admin/assets/js/jquery-1.10.2.js"></script>
+        <!-- BOOTSTRAP SCRIPTS -->
+        <script src="~/admin/assets/js/bootstrap.min.js"></script>
+        <!-- CUSTOM SCRIPTS -->
+        <script src="~/admin/assets/js/custom.js"></script>
+    </invironment>
+    <invironment exclude="Development">
+        <script src="~/admin/assets/js/site.min.js" asp-append-version="true"></script>
+    </invironment>
+
+
 </body>
 </html>

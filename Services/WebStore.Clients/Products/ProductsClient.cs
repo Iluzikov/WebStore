@@ -17,7 +17,7 @@ namespace WebStore.Clients.Products
 
         public IEnumerable<CategoryDTO> GetCategories() => Get<IEnumerable<CategoryDTO>>($"{_serviceAddress}/categories");
 
-        public ProductDTO GetProductById(int id) => throw new NotImplementedException();
+        public ProductDTO GetProductById(int id) => Get<ProductDTO>($"{_serviceAddress}/{id}");
 
         public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null) =>
             Post(_serviceAddress, filter ?? new ProductFilter())
