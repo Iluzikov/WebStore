@@ -1,0 +1,35 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SimpleMvcSitemap;
+using WebStore.Interfaces.Services;
+
+namespace WebStore.Controllers
+{
+    public class SitemapController : Controller
+    {
+        public IActionResult Index([FromServices] IProductService productService)
+        {
+            var nodes = new List<SitemapNode>()
+            {
+                new (Url.Action("Index","Home")),
+                new (Url.Action("ContactUs","Home")),
+                new (Url.Action("Blogs","Home")),
+                new (Url.Action("BlogSingle","Home")),
+                new (Url.Action("Shop","Catalog")),
+                new (Url.Action("Index","WebAPI")),
+            };
+
+            nodes.AddRange(productService.GetCategories().Select(s => new SitemapNode(Url.Action("Shop", "Catalog", new { CategoryId = s.Id }))));
+
+            foreach (var brand in productService.GetBrands())
+                nodes.Add(new SitemapNode(Url.Action("Shop", "Catalog", new { BrandId = brand.Id })));
+            
+            foreach (var product in productService.GetProducts())
+                nodes.Add(new SitemapNode(Url.Action("Details", "Catalog", new { product.Id })));
+
+            return new SitemapProvider().CreateSitemap(new SitemapModel(nodes));
+        }
+    }
+}
