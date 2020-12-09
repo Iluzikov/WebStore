@@ -24,12 +24,13 @@ namespace WebStore.ViewComponents
         {
             var dbBrands = _productService.GetBrands();
             return dbBrands
-                .Select(b => b.FromDTO())
+                //.Select(b => b.FromDTO())
                 .Select(b => new BrandViewModel
             {
                 Id = b.Id,
                 Name = b.Name,
                 Order = b.Order,
+                ProductsCount = b.ProductsCount,
             }).OrderBy(b => b.Order);
         }
     }

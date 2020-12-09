@@ -19,7 +19,7 @@ namespace WebStore.Services.Products.InSQL
         public IEnumerable<CategoryDTO> GetCategories() => _context.Categories.AsEnumerable().Select(c => c.ToDTO());
         
 
-        public IEnumerable<BrandDTO> GetBrands() => _context.Brands.AsEnumerable().Select(b => b.ToDTO());
+        public IEnumerable<BrandDTO> GetBrands() => _context.Brands.Include(b => b.Products).AsEnumerable().Select(b => b.ToDTO());
 
 
         public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
