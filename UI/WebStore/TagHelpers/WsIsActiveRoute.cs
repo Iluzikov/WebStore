@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebStore.TagHelpers
 {
@@ -12,6 +11,7 @@ namespace WebStore.TagHelpers
     public class WsIsActiveRoute : TagHelper
     {
         private const string AttributeName = "ws-is-active-route";
+        private const string IgnoreAction = "ws-ignore-action";
 
 
         [HtmlAttributeName("asp-action")]
@@ -32,12 +32,16 @@ namespace WebStore.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (IsActive())
+            var ignore_action = output.Attributes.ContainsName(IgnoreAction);
+
+            if (IsActive(ignore_action))
                 MakeActive(output);
+
              output.Attributes.RemoveAll(AttributeName);
+             output.Attributes.RemoveAll(IgnoreAction);
         }
 
-        private bool IsActive()
+        private bool IsActive(bool ignoreAction)
         {
             var route_values = ViewContext.RouteData.Values;
 
@@ -48,7 +52,7 @@ namespace WebStore.TagHelpers
             if (!string.IsNullOrEmpty(Controller) && !string.Equals(current_controller, Controller, str_comp))
                 return false;
 
-            if (!string.IsNullOrEmpty(Action) && !string.Equals(current_action, Action, str_comp))
+            if (!ignoreAction && !string.IsNullOrEmpty(Action) && !string.Equals(current_action, Action, str_comp))
                 return false;
 
             foreach (var (key, value) in RouteValues)

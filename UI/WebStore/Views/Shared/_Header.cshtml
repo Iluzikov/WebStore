@@ -94,9 +94,9 @@
                         <ul class="nav navbar-nav collapse navbar-collapse">
                             <li><a ws-is-active-route asp-controller="Home" asp-action="Index">Home</a></li>
                             <li class="dropdown">
-                                <a asp-controller="Catalog" asp-action="Shop">Shop<i class="fa fa-angle-down"></i></a>
+                                <a ws-is-active-route ws-ignore-action asp-controller="Catalog" asp-action="Shop">Shop<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
-                                    <li><a ws-is-active-route asp-controller="Catalog" asp-action="Shop" >Products</a></li>
+                                    <li><a ws-is-active-route ws-ignore-action asp-controller="Catalog" asp-action="Shop" >Products</a></li>
                                     <li><a ws-is-active-route asp-controller="Home" asp-action="CheckOut" >Checkout</a></li>
                                     <li><a ws-is-active-route asp-controller="Cart" asp-action="Details">Cart</a></li>
                                     <li><a ws-is-active-route asp-controller="Home" asp-action="Login">Login</a></li>
