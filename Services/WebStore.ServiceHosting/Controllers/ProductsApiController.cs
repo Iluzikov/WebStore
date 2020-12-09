@@ -14,15 +14,26 @@ namespace WebStore.ServiceHosting.Controllers
         private readonly IProductService _productService;
         public ProductsApiController(IProductService productService) => _productService = productService;
 
+        
         /// <summary>Получение списка брендов</summary>
         /// <returns>Список брендов</returns>
         [HttpGet("brands")]
         public IEnumerable<BrandDTO> GetBrands() => _productService.GetBrands();
 
+        /// <summary>Получение бренда по идентификатору</summary>
+        /// <returns>Бренд</returns>
+        [HttpGet("brands/{id}")]
+        public BrandDTO GetBrandById(int id) => _productService.GetBrandById(id);
+
         /// <summary>Получение списка категорий</summary>
         /// <returns>Список категорий</returns>
         [HttpGet("categories")]
         public IEnumerable<CategoryDTO> GetCategories() => _productService.GetCategories();
+
+        /// <summary>Получение категории по идентификатору</summary>
+        /// <returns>Категория</returns>
+        [HttpGet("categories/{id}")]
+        public CategoryDTO GetCategoryById(int id) => _productService.GetCategoryById(id);
 
         /// <summary>Получение продукта по идентификатору</summary>
         /// <param name="id">Идентификатор продукта</param>

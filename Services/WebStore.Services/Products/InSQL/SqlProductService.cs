@@ -51,5 +51,9 @@ namespace WebStore.Services.Products.InSQL
                 .FirstOrDefault(p => p.Id == id)
                 .ToDTO();
         }
+
+        public BrandDTO GetBrandById(int id) => _context.Brands.Include(b => b.Products).FirstOrDefault(b => b.Id == id).ToDTO();
+
+        public CategoryDTO GetCategoryById(int id) => _context.Categories.Find(id).ToDTO();
     }
 }

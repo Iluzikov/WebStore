@@ -10,7 +10,9 @@
                 <div class="single-products">
                     <div class="productinfo text-center">
                         
-                        <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@item.Id">
+                        <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@item.Id"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-BrandId="@Context.Request.Query["BrandId"]">
                             <img src="~/images/shop/@item.ImageUrl" alt="" />
                             <h2>@item.Price.ToString("C")</h2>
                             <p>@item.Name</p>
