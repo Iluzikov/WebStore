@@ -15,11 +15,25 @@ namespace WebStore.ViewComponents
             _productService = productService;
         }
 
-        public IViewComponentResult Invoke() => View(GetCategories());
-
-        private List<CategoryViewModel> GetCategories()
+        public IViewComponentResult Invoke(string CategoryId)
         {
+            var category_id = int.TryParse(CategoryId, out var id) ? id : (int?)null;
+            var categories = GetCategories(category_id, out var parent_category_id);
+
+            return View(new SelectableCategoriesViewModel 
+            {
+                Categories = categories,
+                CurrentCategoryId = category_id,
+                ParentCategoryId = parent_category_id
+            });
+        }
+
+        private IEnumerable<CategoryViewModel> GetCategories(int? categoryId, out int? parentCategoryId)
+        {
+            parentCategoryId = null;
+
             var categories = _productService.GetCategories();
+
             // получим и заполним родительские категории
             var parentSections = categories.Where(p => !p.ParentId.HasValue).ToArray();
             var parentCategories = new List<CategoryViewModel>();
@@ -41,6 +55,9 @@ namespace WebStore.ViewComponents
                 var childCategories = categories.Where(c => c.ParentId == CategoryViewModel.Id);
                 foreach (var childCategory in childCategories)
                 {
+                    if (childCategory.Id == categoryId)
+                        parentCategoryId = childCategory.ParentId;
+
                     CategoryViewModel.ChildCategories.Add(new CategoryViewModel()
                     {
                         Id = childCategory.Id,
