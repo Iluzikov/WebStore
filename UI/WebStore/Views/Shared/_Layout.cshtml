@@ -7,9 +7,9 @@
     <meta name="author" content="">
     <title>@ViewData["Title"]</title>
 
-    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true">
     <link href="~/css/font-awesome.min.css" rel="stylesheet">
-    <link href="~/css/main.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet" asp-append-version="true">
 
     <invironment include="Development">
         <link href="~/css/prettyPhoto.css" rel="stylesheet">
@@ -44,7 +44,7 @@
     <invironment include="Development">
         <script src="~/js/price-range.js"></script>
         <script src="~/js/jquery.prettyPhoto.js"></script>
-        <script src="~/js/main.js"></script>
+        <script src="~/js/main.js" asp-append-version="true"></script>
     </invironment>
     <invironment exclude="Development">
         <script src="~/js/site.min.js" asp-append-version="true"></script>
