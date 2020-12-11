@@ -21,22 +21,22 @@ namespace WebStore.Controllers
         public IActionResult DecrementFromCart(int id)
         {
             _cartService.DecrementFromCart(id);
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
         public IActionResult RemoveFromCart(int id)
         {
             _cartService.RemoveFromCart(id);
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
         public IActionResult RemoveAll()
         {
             _cartService.RemoveAll();
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
-        public IActionResult AddToCart(int id, string returnUrl)
+        public IActionResult AddToCart(int id)
         {
             _cartService.AddToCart(id);
-            return RedirectToAction(returnUrl);
+            return RedirectToAction(nameof(Details));
         }
 
         [Authorize]
@@ -94,7 +94,7 @@ namespace WebStore.Controllers
             _cartService.RemoveAll();
             return Ok();
         }
-        public IActionResult AddToCartAPI(int id, string returnUrl)
+        public IActionResult AddToCartAPI(int id )
         {
             _cartService.AddToCart(id);
             return Json(new { id, message = $"Товар с id:{id} добавлен в корзину"});
