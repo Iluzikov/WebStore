@@ -41,6 +41,18 @@
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/jquery.scrollUp.min.js"></script>
 
+    <script src="~/js/Cart/CartLogic.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            Cart.init({
+                getCartViewLink: "@Url.Action("GetCartView", "Cart")",
+                addToCartLink: "@Url.Action("AddToCartAPI", "Cart")",
+                decrementLink: "@Url.Action("DecrementFromCartAPI", "Cart")",
+                removeFromCart: "@Url.Action("RemoveFromCartAPI", "Cart")"
+            })
+        })
+    </script>
+
     <invironment include="Development">
         <script src="~/js/price-range.js"></script>
         <script src="~/js/jquery.prettyPhoto.js"></script>
