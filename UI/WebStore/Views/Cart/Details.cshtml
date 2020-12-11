@@ -45,6 +45,7 @@
                                        asp-action="AddToCart"
                                        asp-route-id="@product.Id"
                                        asp-route-returnUrl="@Context.Request.Path"
+                                       data-id="@product.Id"
                                        class="cart_quantity_up">
                                         +
                                     </a>
@@ -52,6 +53,7 @@
                                     <a asp-controller="Cart"
                                        asp-action="DecrementFromCart"
                                        asp-route-id="@product.Id"
+                                       data-id="@product.Id"
                                        class="cart_quantity_down">
                                         -
                                     </a>
@@ -67,6 +69,7 @@
                                    asp-controller="Cart"
                                    asp-action="RemoveFromCart"
                                    asp-route-id="@product.Id">
+                                   data-id="@product.Id"
                                     <i class="fa fa-times"></i>
                                 </a>
                             </td>
