@@ -45,7 +45,7 @@ namespace WebStore.ServiceHosting.Controllers
         /// <param name="filter">Фильтр</param>
         /// <returns>Отфильтрованный список продуктов</returns>
         [HttpPost]
-        public IEnumerable<ProductDTO> GetProducts([FromBody]ProductFilter filter = null) =>
+        public PageProductsDTO GetProducts([FromBody]ProductFilter filter = null) =>
             _productService.GetProducts(filter ?? new ProductFilter());
     }
 }

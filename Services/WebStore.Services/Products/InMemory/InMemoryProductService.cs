@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 using WebStore.Domain;
 using WebStore.Domain.DTO.Products;
 using WebStore.Domain.Entities;
@@ -10,9 +11,9 @@ namespace WebStore.Services.Products.InMemory
 {
     public class InMemoryProductService : IProductService
     {
-        private readonly List<Category> _categories;
-        private readonly List<Brand> _brands;
-        private readonly List<Product> _products;
+        private readonly IEnumerable<Category> _categories;
+        private readonly IEnumerable<Brand> _brands;
+        private readonly IEnumerable<Product> _products;
 
         public InMemoryProductService()
         {
@@ -405,7 +406,7 @@ namespace WebStore.Services.Products.InMemory
         
         public IEnumerable<BrandDTO> GetBrands() => _brands.AsEnumerable().Select(b => b.ToDTO());
         
-        public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
+        public PageProductsDTO GetProducts(ProductFilter filter = null)
         {
             var query = _products;
 
@@ -413,12 +414,24 @@ namespace WebStore.Services.Products.InMemory
                 query = query
                     .Where(p => p.CategoryId.Equals(filter.CategoryId))
                     .ToList();
+
             if (filter.BrandId.HasValue)
                 query = query
                     .Where(p => p.BrandId.HasValue && p.BrandId.Value == filter.BrandId.Value)
                     .ToList();
 
-            return query.ToDTO();
+            var total_count = query.Count();
+
+            if (filter?.PageSize > 0)
+                query = query
+                    .Skip((filter.Page - 1) * (int) filter.PageSize)
+                    .Take((int) filter.PageSize);
+
+            return new PageProductsDTO
+            {
+                TotalCount = total_count,
+                Products = query.ToDTO()
+            };
         }
 
         public ProductDTO GetProductById(int id) => _products.FirstOrDefault(p => p.Id == id).ToDTO();
