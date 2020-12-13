@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 using WebStore.Controllers;
 using WebStore.Domain;
@@ -48,7 +49,10 @@ namespace WebStore.Tests.Controllers
                    }
                });
 
-            var controller = new CatalogController(product_data_mock.Object);
+            var configuration_mock = new Mock<IConfiguration>();
+            configuration_mock.Setup(cfg => cfg[It.IsAny<string>()]).Returns("3");
+
+            var controller = new CatalogController(product_data_mock.Object, configuration_mock.Object);
 
             #endregion
 
@@ -125,7 +129,10 @@ namespace WebStore.Tests.Controllers
             const int expected_category_id = 1;
             const int expected_brand_id = 5;
 
-            var controller = new CatalogController(product_service_mock.Object);
+            var configuration_mock = new Mock<IConfiguration>();
+            configuration_mock.Setup(cfg => cfg[It.IsAny<string>()]).Returns("3");
+
+            var controller = new CatalogController(product_service_mock.Object, configuration_mock.Object);
 
             var result = controller.Shop(expected_category_id, expected_brand_id);
 
