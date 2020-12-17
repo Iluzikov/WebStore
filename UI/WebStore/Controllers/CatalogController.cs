@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Linq;
 using WebStore.Domain;
 using WebStore.Domain.ViewModels;
@@ -10,6 +11,7 @@ namespace WebStore.Controllers
 {
     public class CatalogController : Controller
     {
+        private const string _pageSizeConfig = "PageSize";
         private readonly IProductService _productService;
         private readonly IConfiguration _configuration;
 
@@ -22,7 +24,7 @@ namespace WebStore.Controllers
         public IActionResult Shop(int? categoryId, int? brandId, int page = 1, int? pageSize = null)
         {
             var page_size = pageSize 
-                ?? (int.TryParse(_configuration["PageSize"], out var size) ? size : (int?)null);
+                ?? (int.TryParse(_configuration[_pageSizeConfig], out var size) ? size : (int?)null);
 
             // получаем список отфильтрованных продуктов
             var filter = new ProductFilter 
@@ -57,5 +59,23 @@ namespace WebStore.Controllers
             return View(product.FromDTO().ToView());
         }
 
+        #region WebAPI
+
+        public IActionResult GetFilteredItems(int? categoryId, int? brandId, int page = 1, int? pageSize = null)
+            => PartialView("Partial/_FeaturesItems", GetProducts(categoryId, brandId, page, pageSize));
+
+        private IEnumerable<ProductViewModel> GetProducts(int? categoryId, int? brandId, int page, int? pageSize)
+            => _productService.GetProducts(new ProductFilter
+            {
+                CategoryId = categoryId,
+                BrandId = brandId,
+                Page = page,
+                PageSize = pageSize
+                ?? (int.TryParse(_configuration[_pageSizeConfig], out var size) ? size : (int?)null)
+            }).Products.OrderBy(p => p.Order)
+            .FromDTO()
+            .ToView();
+
+        #endregion
     }
 }

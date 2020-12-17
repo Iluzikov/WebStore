@@ -16,7 +16,9 @@
 
             <div class="col-sm-9 padding-right">
                 <div class="features_items">
-                    @await Html.PartialAsync("_Partial/_FeaturesItems", Model.Products)
+                    <div id="catalog_item_container">
+                        @await Html.PartialAsync("_Partial/_FeaturesItems", Model.Products)
+                    </div>
 
                     <paging page-model="Model.PageViewModel"
                             page-action="Shop"
