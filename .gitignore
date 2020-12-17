@@ -346,3 +346,4 @@ healthchecksdb
 /UI/WebStore/wwwroot/lib
 /Common/WebStore.Domain/WebStore.Domain.xml
 /Services/WebStore.ServiceHosting/WebStore.ServiceHosting.xml
+/UI/WebStore/wwwroot/twitter-bootstrap

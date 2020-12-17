@@ -62,7 +62,10 @@ namespace WebStore.Controllers
         #region WebAPI
 
         public IActionResult GetFilteredItems(int? categoryId, int? brandId, int page = 1, int? pageSize = null)
-            => PartialView("Partial/_FeaturesItems", GetProducts(categoryId, brandId, page, pageSize));
+        {
+            var res = PartialView("_Partial/_FeaturesItems", GetProducts(categoryId, brandId, page, pageSize));
+            return res;
+        }
 
         private IEnumerable<ProductViewModel> GetProducts(int? categoryId, int? brandId, int page, int? pageSize)
             => _productService.GetProducts(new ProductFilter
@@ -72,7 +75,8 @@ namespace WebStore.Controllers
                 Page = page,
                 PageSize = pageSize
                 ?? (int.TryParse(_configuration[_pageSizeConfig], out var size) ? size : (int?)null)
-            }).Products.OrderBy(p => p.Order)
+            }).Products
+            .OrderBy(p => p.Order)
             .FromDTO()
             .ToView();
 
