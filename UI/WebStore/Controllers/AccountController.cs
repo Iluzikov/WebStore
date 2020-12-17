@@ -67,6 +67,11 @@ namespace WebStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public async Task<IActionResult> IsNameFree(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            return Json(user is null ? "true" : "Имя уже занято");
+        }
 
         [HttpGet]
         public IActionResult Register() => View(new RegisterUserViewModel());
