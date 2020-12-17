@@ -27,5 +27,8 @@ namespace WebStore.Controllers
             await Task.Delay(2000);
             return PartialView("Partial/_DataView", new AjaxTestDataViewModel(id, msg, DateTime.Now));
         }
+
+        public IActionResult SignalRTest() => View();
+
     }
 }
