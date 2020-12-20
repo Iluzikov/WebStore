@@ -59,7 +59,7 @@ namespace WebStore.ServiceHosting
             services.AddScoped<IEmployeesService, SqlEmployeeService>();
             services.AddSingleton<ICarsService, InMemoryCarsService>();
             services.AddScoped<IProductService, SqlProductService>();
-            services.AddScoped<ICartService, CoocieCartService>();
+            services.AddScoped<ICartService, CookiesCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
 
             services.AddControllers();

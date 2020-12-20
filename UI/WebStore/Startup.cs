@@ -85,7 +85,9 @@ namespace WebStore
             services.AddSingleton<ICarsService, InMemoryCarsService>();
 
             services.AddScoped<IProductService, ProductsClient>();
-            services.AddScoped<ICartService, CoocieCartService>();
+            services.AddScoped<ICartStore, CookiesCartStore>();
+            services.AddScoped<ICartService, CartService>();
+            //services.AddScoped<ICartService, CookiesCartService>();
             services.AddScoped<IOrderService, OrdersClient>();
 
             services.AddTransient<IValuesService, ValuesClient>();

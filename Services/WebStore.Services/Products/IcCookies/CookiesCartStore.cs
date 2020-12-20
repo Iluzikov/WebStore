@@ -2,20 +2,25 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WebStore.Domain;
 using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
-using WebStore.Services.Mapping;
 
 namespace WebStore.Services.Products.IcCookies
 {
-    public class CoocieCartService : ICartService
+    public class CookiesCartStore : ICartStore
     {
-        private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _cartName;
-        private Cart Cart
+
+        public CookiesCartStore(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _cartName = "WebStore-Cart-" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
+                       ? _httpContextAccessor.HttpContext.User.Identity.Name
+                       : ""); ;
+        }
+
+        public Cart Cart
         {
             get
             {
@@ -90,71 +95,6 @@ namespace WebStore.Services.Products.IcCookies
                                Expires = DateTime.Now.AddDays(1)
                            });
             }
-        }
-
-        public CoocieCartService(IProductService productService, IHttpContextAccessor httpContextAccessor)
-        {
-            _productService = productService;
-            _httpContextAccessor = httpContextAccessor;
-            _cartName = "WebStore-Cart-" + (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated
-                       ? _httpContextAccessor.HttpContext.User.Identity.Name
-                       : ""); ;
-        }
-
-        public void AddToCart(int id)
-        {
-            var cart = Cart;
-            var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-
-            if (item != null)
-                item.Quantity++;
-            else
-                cart.Items.Add(new CartItem { ProductId = id, Quantity = 1 });
-
-            Cart = cart;
-        }
-
-        public void DecrementFromCart(int id)
-        {
-            var cart = Cart;
-            var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-            if (item == null)
-                return;
-            if (item.Quantity > 0)
-                item.Quantity--;
-            if (item.Quantity == 0)
-                cart.Items.Remove(item);
-
-            Cart = cart;
-        }
-
-        public void RemoveAll()
-        {
-            Cart = new Cart { Items = new List<CartItem>() };
-        }
-
-        public void RemoveFromCart(int id)
-        {
-            var cart = Cart;
-            var item = cart.Items.FirstOrDefault(x => x.ProductId == id);
-            if (item == null) return;
-            cart.Items.Remove(item);
-            Cart = cart;
-        }
-
-        public CartViewModel TransformCart()
-        {
-            var products = _productService.GetProducts(new ProductFilter
-            {
-                Ids = Cart.Items.Select(item => item.ProductId).ToArray()
-            });
-
-            var products_view_models = products.FromDTO().ToView().ToDictionary(p => p.Id);
-
-            return new CartViewModel
-            {
-                Items = Cart.Items.Select(item => (products_view_models[item.ProductId], item.Quantity))
-            };
         }
     }
 }
