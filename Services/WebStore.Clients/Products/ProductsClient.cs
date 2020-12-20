@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using WebStore.Clients.Base;
@@ -13,11 +12,15 @@ namespace WebStore.Clients.Products
     {
         public ProductsClient(IConfiguration configuration) : base(configuration, WebAPI.Products) { }
 
+        public BrandDTO GetBrandById(int id) => Get<BrandDTO>($"{_serviceAddress}/brands/{id}");
+
         public IEnumerable<BrandDTO> GetBrands() => Get<IEnumerable<BrandDTO>>($"{_serviceAddress}/brands");
 
         public IEnumerable<CategoryDTO> GetCategories() => Get<IEnumerable<CategoryDTO>>($"{_serviceAddress}/categories");
 
-        public ProductDTO GetProductById(int id) => throw new NotImplementedException();
+        public CategoryDTO GetCategoryById(int id) => Get<CategoryDTO>($"{_serviceAddress}/categories/{id}");
+
+        public ProductDTO GetProductById(int id) => Get<ProductDTO>($"{_serviceAddress}/{id}");
 
         public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null) =>
             Post(_serviceAddress, filter ?? new ProductFilter())

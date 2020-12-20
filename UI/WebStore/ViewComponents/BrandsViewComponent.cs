@@ -13,18 +13,24 @@ namespace WebStore.ViewComponents
 
         public BrandsViewComponent(IProductService productService) => _productService = productService;
 
-        public IViewComponentResult Invoke() => View(GetBrands());
+        public IViewComponentResult Invoke(string BrandId) => 
+            View(new SelectableBrandsViewModel 
+            {
+                Brands = GetBrands(),
+                CurrentBrandId = int.TryParse(BrandId, out var id) ? id : (int?)null
+            });
 
         private IEnumerable<BrandViewModel> GetBrands()
         {
             var dbBrands = _productService.GetBrands();
             return dbBrands
-                .Select(b => b.FromDTO())
+                //.Select(b => b.FromDTO())
                 .Select(b => new BrandViewModel
             {
                 Id = b.Id,
                 Name = b.Name,
                 Order = b.Order,
+                ProductsCount = b.ProductsCount,
             }).OrderBy(b => b.Order);
         }
     }

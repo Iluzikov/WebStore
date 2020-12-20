@@ -19,7 +19,7 @@ namespace WebStore.Services.Products.InSQL
         public IEnumerable<CategoryDTO> GetCategories() => _context.Categories.AsEnumerable().Select(c => c.ToDTO());
         
 
-        public IEnumerable<BrandDTO> GetBrands() => _context.Brands.AsEnumerable().Select(b => b.ToDTO());
+        public IEnumerable<BrandDTO> GetBrands() => _context.Brands.Include(b => b.Products).AsEnumerable().Select(b => b.ToDTO());
 
 
         public IEnumerable<ProductDTO> GetProducts(ProductFilter filter = null)
@@ -51,5 +51,9 @@ namespace WebStore.Services.Products.InSQL
                 .FirstOrDefault(p => p.Id == id)
                 .ToDTO();
         }
+
+        public BrandDTO GetBrandById(int id) => _context.Brands.Include(b => b.Products).FirstOrDefault(b => b.Id == id).ToDTO();
+
+        public CategoryDTO GetCategoryById(int id) => _context.Categories.Find(id).ToDTO();
     }
 }

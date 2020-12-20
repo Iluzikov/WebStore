@@ -422,5 +422,9 @@ namespace WebStore.Services.Products.InMemory
         }
 
         public ProductDTO GetProductById(int id) => _products.FirstOrDefault(p => p.Id == id).ToDTO();
+
+        public BrandDTO GetBrandById(int id) => _brands.FirstOrDefault(b => b.Id == id).ToDTO();
+
+        public CategoryDTO GetCategoryById(int id)=> _categories.FirstOrDefault(s => s.Id == id).ToDTO();
     }
 }

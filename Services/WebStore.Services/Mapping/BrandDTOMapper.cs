@@ -1,4 +1,5 @@
-﻿using WebStore.Domain.DTO.Products;
+﻿using System.Linq;
+using WebStore.Domain.DTO.Products;
 using WebStore.Domain.Entities;
 
 namespace WebStore.Services.Mapping
@@ -10,6 +11,7 @@ namespace WebStore.Services.Mapping
             Id = brand.Id,
             Name = brand.Name,
             Order = brand.Order,
+            ProductsCount = brand.Products.Count(),
         };
 
         public static Brand FromDTO(this BrandDTO brand) => brand is null ? null : new Brand
