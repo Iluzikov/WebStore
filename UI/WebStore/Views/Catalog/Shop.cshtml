@@ -18,12 +18,13 @@
                 <div class="features_items">
                     @await Html.PartialAsync("_Partial/_FeaturesItems", Model.Products)
 
-                    <ul class="pagination">
-                        <li class="active"><a href="">1</a></li>
-                        <li><a href="">2</a></li>
-                        <li><a href="">3</a></li>
-                        <li><a href="">&raquo;</a></li>
-                    </ul>
+                    <paging page-model="Model.PageViewModel"
+                            page-action="Shop"
+                            page-url-CategoryId="@Model.CategoryId"
+                            page-url-BrandId="@Model.BrandId"
+                            page-url-PageSize="@Context.Request.Query["PageSize"]">
+
+                    </paging>
                 </div><!--features_items-->
             </div>
         </div>

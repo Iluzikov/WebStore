@@ -21,22 +21,22 @@ namespace WebStore.Controllers
         public IActionResult DecrementFromCart(int id)
         {
             _cartService.DecrementFromCart(id);
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
         public IActionResult RemoveFromCart(int id)
         {
             _cartService.RemoveFromCart(id);
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
         public IActionResult RemoveAll()
         {
             _cartService.RemoveAll();
-            return RedirectToAction("Details");
+            return RedirectToAction(nameof(Details));
         }
-        public IActionResult AddToCart(int id, string returnUrl)
+        public IActionResult AddToCart(int id)
         {
             _cartService.AddToCart(id);
-            return Redirect(returnUrl);
+            return RedirectToAction(nameof(Details));
         }
 
         [Authorize]
@@ -73,5 +73,33 @@ namespace WebStore.Controllers
             ViewBag.OrderId = id;
             return View();
         }
+
+
+        #region WebApi
+
+        public IActionResult GetCartView() => ViewComponent("Cart");
+
+        public IActionResult DecrementFromCartAPI(int id)
+        {
+            _cartService.DecrementFromCart(id);
+            return Ok();
+        }
+        public IActionResult RemoveFromCartAPI(int id)
+        {
+            _cartService.RemoveFromCart(id);
+            return Ok();
+        }
+        public IActionResult RemoveAllAPI()
+        {
+            _cartService.RemoveAll();
+            return Ok();
+        }
+        public IActionResult AddToCartAPI(int id)
+        {
+            _cartService.AddToCart(id);
+            return Json(new { id, message = $"Товар с id:{id} добавлен в корзину"});
+        }
+
+        #endregion
     }
 }

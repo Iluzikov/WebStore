@@ -10,5 +10,7 @@ namespace WebStore.Domain
         public int? CategoryId { get; set; }
         public int? BrandId { get; set; }
         public int[] Ids { get; set; }
+        public int Page { get; set; }
+        public int? PageSize { get; set; }
     }
 }

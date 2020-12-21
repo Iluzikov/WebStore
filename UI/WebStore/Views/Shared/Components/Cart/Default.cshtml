@@ -1,14 +1,11 @@
 ﻿@model CartViewModel
 
-@if (Model.ItemsCount > 0)
-{
-    <a asp-controller="Cart" asp-action="Details" style="color: #fe980f">
-        <i class="fa fa-shopping-cart color="></i>
-        Товары <small>(@Model.ItemsCount шт.)</small> 
-        <p><small>@Model.TotalPrice.ToString("C") </small></p>
-    </a>
+@{
+    var products_count = Model.ItemsCount > 0 ? Model.ItemsCount : (int?)null;
+    var info = products_count is null ? null : $"({products_count})";
 }
-else
-{
-    <a asp-controller="Cart" asp-action="Details"><i class="fa fa-shopping-cart"></i> Cart</a>
-}
+
+<a asp-controller="Cart" asp-action="Details">
+    <i class="fa fa-shopping-cart"></i> Корзина @info
+</a>
+

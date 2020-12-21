@@ -35,28 +35,32 @@ namespace WebStore.Services.Tests.Products
             _productServiceMock = new Mock<IProductService>();
             _productServiceMock
                 .Setup(c => c.GetProducts(It.IsAny<ProductFilter>()))
-                .Returns(new List<ProductDTO>
+                .Returns(new PageProductsDTO
                 {
-                    new()
+                    TotalCount = 2,
+                    Products = new List<ProductDTO>
                     {
-                        Id = 1,
-                        Name = "Product 1",
-                        Price = 1.1m,
-                        Order = 0,
-                        ImageUrl = "Product1.png",
-                        Brand = new BrandDTO { Id = 1, Name = "Brand 1" },
-                        Category = new CategoryDTO { Id = 1, Name = "Category 1"}
-                    },
-                    new()
-                    {
-                        Id = 2,
-                        Name = "Product 2",
-                        Price = 2.2m,
-                        Order = 0,
-                        ImageUrl = "Product2.png",
-                        Brand = new BrandDTO { Id = 2, Name = "Brand 2" },
-                        Category = new CategoryDTO { Id = 2, Name = "Category 2"}
-                    },
+                        new()
+                        {
+                            Id = 1,
+                            Name = "Product 1",
+                            Price = 1.1m,
+                            Order = 0,
+                            ImageUrl = "Product1.png",
+                            Brand = new BrandDTO { Id = 1, Name = "Brand 1" },
+                            Category = new CategoryDTO { Id = 1, Name = "Category 1"}
+                        },
+                        new()
+                        {
+                            Id = 2,
+                            Name = "Product 2",
+                            Price = 2.2m,
+                            Order = 0,
+                            ImageUrl = "Product2.png",
+                            Brand = new BrandDTO { Id = 2, Name = "Brand 2" },
+                            Category = new CategoryDTO { Id = 2, Name = "Category 2"}
+                        },
+                    }
                 });
 
             _cartStoreMock = new Mock<ICartStore>();
